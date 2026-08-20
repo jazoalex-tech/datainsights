@@ -58,9 +58,9 @@ body.night .pg .bar i{background:var(--d-acc)}
 .page::-webkit-scrollbar{display:none}
 .more{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--chr) + 10px);z-index:44;
   font-family:var(--ui);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);
-  background:linear-gradient(transparent,var(--paper) 40%);padding:14px 16px 4px;opacity:0;transition:.35s;pointer-events:none}
+  background:var(--paper);border:1px solid var(--rule);border-radius:22px;padding:8px 16px;opacity:0;transition:.35s;pointer-events:none;box-shadow:0 6px 22px rgba(20,24,28,.10)}
 .more.on{opacity:1}
-body.night .more{color:var(--d-ink2);background:linear-gradient(transparent,var(--d-bg) 40%)}
+body.night .more{color:var(--d-ink2);background:var(--d-bg2);border-color:var(--d-rule);box-shadow:0 6px 22px rgba(0,0,0,.4)}
 .in{max-width:1080px;margin:0 auto;width:100%;min-height:100%;display:flex;flex-direction:column;justify-content:center}
 .in.top{justify-content:flex-start}
 .page.dark{background:var(--d-bg);color:var(--d-ink)}
@@ -116,6 +116,15 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
   font-family:var(--sf);font-size:clamp(19px,2.2vw,28px);line-height:1.22;break-inside:avoid}
 .dark .pq{border-top-color:var(--d-acc);border-bottom-color:var(--d-rule)}
 .hr{height:1px;background:var(--rule);margin:26px 0}
+.hilo{list-style:none;counter-reset:h;margin:4px 0 0}
+.hilo li{counter-increment:h;position:relative;padding:0 0 15px 42px;margin-left:14px;
+  border-left:1px solid var(--rule2);color:var(--ink2);font-size:16px;line-height:1.5}
+.hilo li:last-child{border-left-color:transparent;padding-bottom:0}
+.hilo li::before{content:counter(h);position:absolute;left:-15px;top:-2px;width:29px;height:29px;border-radius:50%;
+  background:var(--paper);border:1px solid var(--acc);color:var(--acc);font-family:var(--ui);font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center}
+.hilo li b{font-family:var(--sf);font-weight:500;font-size:1.07em;color:var(--ink);display:block;margin-bottom:3px;letter-spacing:-.01em}
+.hilo li em{font-style:normal;color:var(--clay)}
 .cap-n{font-family:var(--sf);font-size:clamp(60px,11vw,150px);line-height:.8;color:var(--rule2);letter-spacing:-.04em}
 
 /* portada */
@@ -129,10 +138,10 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
 
 /* 01 tres cifras */
 .tres{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--ink);margin:0 0 30px}
-.tres > div{padding:20px 20px 20px 0;border-right:1px solid var(--rule)}
+.tres > div{padding:16px 18px 16px 0;border-right:1px solid var(--rule)}
 .tres > div:last-child{border-right:0;padding-right:0}
 .tres .q{font-family:var(--ui);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
-.tres .n{font-family:var(--sf);font-size:clamp(34px,4.6vw,56px);line-height:1}
+.tres .n{font-family:var(--sf);font-size:clamp(32px,4.1vw,50px);line-height:1}
 .tres .n small{font-family:var(--ui);font-size:13px;letter-spacing:0;color:var(--ink3);margin-left:7px}
 .tres .src{margin-top:12px;font-size:14.5px;color:var(--ink2);padding-left:12px;border-left:2px solid var(--clay);line-height:1.42}
 @media(max-width:720px){.tres{grid-template-columns:1fr}.tres>div{border-right:0;border-bottom:1px solid var(--rule);padding-right:0}}
@@ -227,11 +236,20 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
         <div class="src">De su propio archivo de seguimiento</div></div>
     </div>
 
-    <div class="cuerpo c2">
-      <p class="dc">Nadie está mintiendo. Cada uno sacó su número de un archivo distinto, y ninguno de los tres archivos está mal. Simplemente nunca nadie acordó qué significa exactamente la palabra “vendido”: si es cuando se firma, cuando se despacha o cuando el cliente paga.</p>
-      <p>Cuarenta minutos después, la reunión no decidió nada. Solo acordó volver a reunirse cuando cuadren las cifras. Mientras tanto, la decisión que había que tomar sigue sin tomarse, y el mes sigue corriendo.</p>
-      <div class="pq">Esa reunión cuesta más al año que la solución que la habría evitado.</div>
-      <p>Lo grave no es el desorden. Lo grave es que a esa hora estaban sentadas las tres personas más caras de la empresa, discutiendo un dato en lugar de discutir el negocio.</p>
+    <div class="dol" style="align-items:start">
+      <div>
+        <ol class="hilo">
+          <li><b>Llegaron tres resultados el mismo día.</b> Cuatrocientos, trescientos ochenta, cuatrocientos veinte. El mismo mes, la misma empresa, tres personas.</li>
+          <li><b>Ninguno de los tres estaba mal.</b> Cada cifra salió de un archivo que alguien mantiene con cuidado todos los días.</li>
+          <li><b>Y ahí empieza la fricción.</b> Cada quien defiende el suyo, y cada quien tiene razón. La conversación deja de ser sobre el negocio y pasa a ser sobre quién tiene el número bueno.</li>
+          <li><b>Porque nadie dejó escrito qué significa “vendido”.</b> Si es cuando se firma, cuando se despacha o cuando el cliente paga. Nunca se acordó, y cada área asumió lo suyo.</li>
+          <li><b>Cuarenta minutos después, no se decidió nada.</b> O peor: <em>sí se decidió</em>, apoyado en el dato del que habló más fuerte. Puede que fuera el correcto. El problema es que no hay manera de saberlo.</li>
+        </ol>
+      </div>
+      <div>
+        <div class="pq" style="margin-top:0">El costo no es la reunión perdida. Es la decisión que se tomó sin saber sobre cuál dato se estaba parando.</div>
+        <p style="color:var(--ink2);font-size:16.5px">Y el lunes siguiente vuelve a pasar. Con otro tema, con las mismas tres personas, con los mismos tres archivos.</p>
+      </div>
     </div>
   </div>
 </article>
@@ -243,6 +261,7 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
       <div><div class="kick">Capítulo dos</div><h2 class="tit" style="margin-bottom:8px">Esto no es nuevo. Es de 1891.</h2></div>
       <div class="cap-n">02</div>
     </div>
+    <p class="bajada" style="margin-bottom:26px">Lo que pasó en esa reunión del lunes tiene ciento treinta años de antigüedad.</p>
     <div class="dol" style="align-items:start">
       <div>
         <figure class="cita">
@@ -270,6 +289,7 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
       <div><div class="kick">Capítulo tres</div><h2 class="tit" style="margin-bottom:8px">¿En cuál de estas se reconoce?</h2></div>
       <div class="cap-n">03</div>
     </div>
+    <p class="bajada" style="margin-bottom:26px">Cada una de estas frases es la reunión del lunes, contada desde otro ángulo.</p>
     <div class="dol">
       <div class="dl">
         <div class="k">01</div><h3>“La información no me cuadra.”</h3>
@@ -316,7 +336,7 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
       <div><div class="kick">Capítulo cuatro</div><h2 class="tit" style="margin-bottom:8px">Tres cosas, en este orden.</h2></div>
       <div class="cap-n">04</div>
     </div>
-    <p class="bajada" style="margin-bottom:28px">No se puede analizar lo que está desordenado, y no se le puede pedir inteligencia a un dato en el que nadie confía.</p>
+    <p class="bajada" style="margin-bottom:28px">Para que la reunión del lunes empiece por la decisión y no por la cifra, hacen falta tres cosas. En este orden: no se puede analizar lo que está desordenado, ni pedirle inteligencia a un dato en el que nadie confía.</p>
     <div class="svs">
       <div class="sv">
         <div class="k">01</div><h3>Ordenar la información</h3><div class="tec">Arquitectura de datos</div>
@@ -343,9 +363,12 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
 <style>
 /* ============ CAP 05 · oscuro ============ */
 .dark .tit,.dark h3{color:var(--d-ink)}
-
 .dark .cap-n{color:#2B343C}
 .dark .cuerpo p,.dark .sub{color:var(--d-ink2)}
+.dark .hilo li{color:var(--d-ink2);border-left-color:rgba(255,255,255,.14)}
+.dark .hilo li::before{background:var(--d-bg);border-color:var(--d-acc);color:var(--d-acc)}
+.dark .hilo li b{color:var(--d-ink)}
+
 .eco-int{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(26px,3.6vw,56px);align-items:center}
 @media(max-width:900px){.eco-int{grid-template-columns:1fr;gap:30px}}
 .flujo{position:relative}
@@ -367,61 +390,64 @@ h2.tit{font-size:clamp(28px,4.6vw,52px);max-width:17ch;margin-bottom:22px}
 @media(max-width:900px){.flujo .fx{grid-template-columns:1fr;gap:18px}.colf,.cols{padding:0}
   .flujo svg.wires{display:none}.nucleo{margin:0 auto}}
 
-/* consola */
-.ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:20px}
-.play{background:var(--d-acc);color:#0A1418;border:0;border-radius:2px;padding:12px 22px;
-  font-family:var(--sf);font-size:14.5px;font-weight:600;cursor:pointer;transition:.25s}
-.play:hover{background:#5BDAF0}.play[disabled]{opacity:.45;cursor:default}
-.steps{display:flex;flex-wrap:wrap}
-.steps div{font-family:var(--ui);font-size:11.5px;color:var(--d-ink2);padding:6px 13px;border-left:1px solid var(--d-rule);transition:.35s}
-.steps div:first-child{border-left:0}.steps div.on{color:var(--d-acc)}
-.demo{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;align-items:start}
-@media(max-width:980px){.demo{grid-template-columns:1fr}}
-.panel{background:var(--d-bg2);border:1px solid var(--d-rule);border-radius:3px;padding:18px 18px 16px}
-.panel + .panel{margin-top:16px}
-.panel .ph{font-family:var(--ui);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--d-ink2);
-  margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--d-rule);display:flex;justify-content:space-between;gap:10px}
-.panel.locked{opacity:.26;pointer-events:none;transition:opacity .8s}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr)}
-.kpi{padding-right:12px;border-right:1px solid var(--d-rule)}
+/* ---- barra de preguntar ---- */
+.ask{border-top:2px solid var(--d-acc);padding-top:20px;margin-bottom:22px}
+.ask-h{font-family:var(--sf);font-size:clamp(21px,2.8vw,32px);color:var(--d-ink);margin-bottom:14px;letter-spacing:-.01em}
+.ask-bar{display:flex;align-items:center;gap:13px;background:#0E1418;border:1px solid rgba(46,204,232,.34);
+  border-radius:4px;padding:15px 18px;min-height:56px}
+.ask-bar .ic{width:8px;height:8px;border-radius:50%;background:var(--d-acc);flex:none;box-shadow:0 0 0 4px rgba(46,204,232,.13)}
+.ask-bar .q{font-family:var(--sf);font-size:clamp(15px,1.7vw,19px);color:var(--d-ink)}
+.ask-bar .q.vacio{color:#5D6B75}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.chip{background:transparent;border:1px solid var(--d-rule);color:var(--d-ink2);border-radius:20px;
+  padding:8px 15px;font-family:var(--ui);font-size:12.5px;cursor:pointer;transition:.22s;text-align:left;line-height:1.3}
+.chip:hover{border-color:var(--d-acc);color:var(--d-ink);background:rgba(46,204,232,.06)}
+.chip.on{background:rgba(46,204,232,.14);border-color:var(--d-acc);color:var(--d-acc)}
+.resp{margin-top:14px;background:#0E1418;border-left:2px solid var(--d-acc);padding:16px 20px;min-height:96px}
+.resp .who{font-family:var(--ui);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--d-acc);
+  margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.resp .who i{width:5px;height:5px;border-radius:50%;background:var(--d-acc);animation:blip 1.4s infinite}
+@keyframes blip{0%,100%{opacity:.3}50%{opacity:1}}
+.resp p{font-family:var(--ui);font-size:14.5px;color:var(--d-ink);line-height:1.66}
+.resp p b{color:#fff;font-weight:600}
+.resp .cur::after{content:'▍';color:var(--d-acc);animation:blip .8s infinite}
+
+/* ---- paneles / gráficas ---- */
+.gr2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:start}
+@media(max-width:980px){.gr2{grid-template-columns:1fr}}
+.panel{background:var(--d-bg2);border:1px solid var(--d-rule);border-radius:3px;padding:16px 18px 14px}
+.panel + .panel{margin-top:14px}
+.panel .ph{font-family:var(--ui);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--d-ink2);
+  margin-bottom:13px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.panel.locked{opacity:.2;pointer-events:none;transition:opacity .8s}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:14px}
+.kpi{padding-right:14px;border-right:1px solid var(--d-rule)}
 .kpi:last-child{border-right:0;padding-right:0}
 .kpi .kl{font-family:var(--ui);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--d-ink2);margin-bottom:7px;line-height:1.3}
-.kpi .kv{font-family:var(--sf);font-weight:600;font-size:clamp(19px,2.1vw,25px);line-height:1;color:var(--d-ink)}
+.kpi .kv{font-family:var(--sf);font-weight:600;font-size:clamp(20px,2.3vw,27px);line-height:1;color:var(--d-ink)}
 .kpi .kv.alerta{color:var(--crit)}
-.kpi .ks{font-family:var(--ui);font-size:11px;color:var(--d-ink2);margin-top:6px}
-.leg{display:flex;gap:15px;flex-wrap:wrap;font-family:var(--ui);font-size:11px;color:var(--d-ink2);margin-bottom:12px}
+.kpi .ks{font-family:var(--ui);font-size:10.5px;color:var(--d-ink2);margin-top:6px}
+.leg{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--ui);font-size:10.5px;color:var(--d-ink2);margin-bottom:10px}
 .leg span{display:flex;align-items:center;gap:6px}
-.leg i{width:10px;height:10px;border-radius:2px;display:block}
-.tip{position:fixed;z-index:95;background:#0A0E12;border:1px solid rgba(255,255,255,.18);border-radius:3px;
+.leg i{width:9px;height:9px;border-radius:2px;display:block}
+.leg i.tick{width:2px;height:12px;border-radius:0;background:var(--d-ink2)}
+.tip{position:fixed;z-index:95;background:#05090C;border:1px solid rgba(255,255,255,.2);border-radius:3px;
   padding:8px 11px;font-family:var(--ui);font-size:12px;color:var(--d-ink);pointer-events:none;opacity:0;
   transition:opacity .15s;white-space:nowrap;line-height:1.5}
 .tip b{color:#fff}
 .alerta-c{border-left:3px solid var(--warn);background:rgba(250,178,25,.07);padding:12px 15px;margin-bottom:9px}
 .alerta-c.crit{border-color:var(--crit);background:rgba(208,59,59,.09)}
-.alerta-c .at{font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
+.alerta-c .at{font-family:var(--ui);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn);margin-bottom:6px}
 .alerta-c.crit .at{color:var(--crit)}
 .alerta-c p{font-family:var(--ui);font-size:13.5px;color:var(--d-ink);line-height:1.5}
 .alerta-c p b{color:#fff;font-weight:600}
-.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
-.chip{background:transparent;border:1px solid var(--d-rule);color:var(--d-ink2);border-radius:18px;
-  padding:7px 13px;font-family:var(--ui);font-size:12.5px;cursor:pointer;transition:.25s;text-align:left}
-.chip:hover{border-color:var(--d-acc);color:var(--d-ink)}
-.chip.on{background:rgba(46,204,232,.13);border-color:var(--d-acc);color:var(--d-acc)}
-.resp{background:#0E1418;border:1px solid var(--d-rule);border-radius:3px;padding:16px 18px;min-height:118px}
-.resp .who{font-family:var(--ui);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--d-acc);
-  margin-bottom:9px;display:flex;align-items:center;gap:8px}
-.resp .who i{width:5px;height:5px;border-radius:50%;background:var(--d-acc);animation:blip 1.4s infinite}
-@keyframes blip{0%,100%{opacity:.3}50%{opacity:1}}
-.resp p{font-family:var(--ui);font-size:14px;color:var(--d-ink);line-height:1.62}
-.resp p b{color:#fff;font-weight:600}
-.resp .cur::after{content:'▍';color:var(--d-acc);animation:blip .8s infinite}
-.vertabla{background:none;border:0;color:var(--d-ink2);font-family:var(--ui);font-size:11.5px;cursor:pointer;
-  text-decoration:underline;text-underline-offset:4px;padding:0;margin-top:12px}
+.vertabla{background:none;border:0;color:#66757F;font-family:var(--ui);font-size:11px;cursor:pointer;
+  text-decoration:underline;text-underline-offset:4px;padding:0;margin-top:10px}
 .vertabla:hover{color:var(--d-acc)}
-table.tb{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:12.5px;margin-top:12px;display:none}
+table.tb{width:100%;border-collapse:collapse;font-family:var(--ui);font-size:12px;margin-top:10px;display:none}
 table.tb.on{display:table}
-table.tb th,table.tb td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--d-rule);color:var(--d-ink2)}
-table.tb th{color:var(--d-ink);font-weight:600;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+table.tb th,table.tb td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--d-rule);color:var(--d-ink2)}
+table.tb th{color:var(--d-ink);font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
 table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-ink)}
 
 /* ============ 06 método ============ */
@@ -456,18 +482,21 @@ table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-in
   font-family:var(--ui);font-size:11px;letter-spacing:.1em;color:var(--ink3);max-width:70ch;line-height:1.8}
 </style>
 
-<!-- 8 · CAP 05 apertura (oscuro) -->
-<article class="page dark" data-cap="05 · El ecosistema" data-idx="7" data-night="1">
+<!-- 8 · CAP 05 · el ecosistema -->
+<article class="page dark" data-cap="05 · El ecosistema" data-idx="7" data-night="1" id="pgEco">
   <div class="in top">
-    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:24px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:22px">
       <div><div class="kick">Capítulo cinco</div><h2 class="tit" style="margin-bottom:8px">La inteligencia no va en una esquina. Va en el centro.</h2></div>
       <div class="cap-n">05</div>
     </div>
     <div class="eco-int">
-      <div class="cuerpo">
-        <p>Casi todas las empresas compran tecnología por pedazos: un programa para facturar, otro para nómina, una hoja de cálculo para la obra. Cada pedazo funciona. El conjunto, no.</p>
-        <p>Un ecosistema es lo contrario: la información entra por donde ya entra hoy, se ordena sola, se vuelve tablero, y la inteligencia artificial se sienta encima de todo eso —no al lado— para avisarle y para responderle.</p>
-        <p><b>Pase la página y véalo funcionando.</b> Los datos del ejemplo son inventados; los cálculos ocurren en vivo.</p>
+      <div>
+        <ol class="hilo">
+          <li><b>Las empresas compran tecnología por pedazos.</b> Un programa para facturar, otro para nómina, una hoja de cálculo para la obra. Cada pedazo funciona; el conjunto, no.</li>
+          <li><b>Un ecosistema entra por donde ya entra la información.</b> No hay que cambiar cómo trabaja su gente.</li>
+          <li><b>Se ordena sola y se vuelve tablero.</b> Una sola fuente, un solo número.</li>
+          <li><b>Y la inteligencia se sienta encima, no al lado.</b> Para responderle cuando pregunta, y para avisarle cuando no.</li>
+        </ol>
       </div>
       <div class="flujo">
         <svg class="wires" id="wires"></svg>
@@ -491,57 +520,79 @@ table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-in
   </div>
 </article>
 
-<!-- 9 · CAP 05 simulador (oscuro) -->
-<article class="page dark" data-cap="05 · El ecosistema" data-idx="8" data-night="1" id="pgSim">
+<!-- 9 · CAP 05 · usted pregunta -->
+<article class="page dark" data-cap="05 · Usted pregunta" data-idx="8" data-night="1" id="pgAsk">
   <div class="in top">
-    <div class="kick">Capítulo cinco · en vivo</div>
-    <div class="ctrl">
-      <button class="play" id="play">Poner a andar el ecosistema</button>
-      <div class="steps" id="steps">
-        <div>1 · Llegan los datos</div><div>2 · Se ordenan</div><div>3 · Se vuelven tablero</div><div>4 · La inteligencia avisa</div>
-      </div>
+    <div class="kick">Capítulo cinco · usted pregunta</div>
+    <div class="ask">
+      <div class="ask-h">Pregúntele a su negocio.</div>
+      <div class="ask-bar"><span class="ic"></span><span class="q vacio" id="askQ">Escoja una pregunta abajo y mire lo que pasa en las gráficas…</span></div>
+      <div class="chips" id="chips"></div>
+      <div class="resp" id="resp"><p style="color:#5D6B75;font-family:var(--ui);font-size:14px">La respuesta no está escrita: se calcula en el momento sobre los datos de esta empresa de ejemplo.</p></div>
     </div>
-    <div class="demo">
-      <div>
-        <div class="panel locked" id="pTablero">
-          <div class="ph"><span>Tablero · año en curso</span><span id="stampT">—</span></div>
-          <div class="kpis">
-            <div class="kpi"><div class="kl">Ejecutado en el año</div><div class="kv" id="k1">—</div><div class="ks">millones de pesos</div></div>
-            <div class="kpi"><div class="kl">Del presupuesto</div><div class="kv" id="k2">—</div><div class="ks" id="k2s">—</div></div>
-            <div class="kpi"><div class="kl">Rubros en alerta</div><div class="kv alerta" id="k3">—</div><div class="ks">de seis</div></div>
-          </div>
-          <div class="ph" style="margin-top:20px"><span>Presupuesto contra ejecutado, por rubro</span><span style="color:#6D7A84">en millones</span></div>
-          <div class="leg">
-            <span><i style="background:#3D4A55"></i>Presupuesto</span>
-            <span><i style="background:#1E9FB8"></i>Ejecutado</span>
-            <span><i style="background:#D03B3B"></i>Sobrecosto</span>
-          </div>
-          <div id="barras"></div>
-          <button class="vertabla" id="btnTabla">Ver los datos en tabla</button>
-          <table class="tb" id="tabla"></table>
+
+    <div class="gr2">
+      <div class="panel" id="pBarras">
+        <div class="ph"><span>Gasto del año contra lo presupuestado</span><span style="color:#66757F">en millones de pesos</span></div>
+        <div class="leg">
+          <span><i style="background:#1E9FB8"></i>Gastado</span>
+          <span><i style="background:#D03B3B"></i>Por encima del presupuesto</span>
+          <span><i class="tick"></i>Lo presupuestado</span>
         </div>
-        <div class="panel locked" id="pLinea">
-          <div class="ph"><span>Cómo se gastó, mes a mes</span><span style="color:#6D7A84">punteada = promedio presupuestado</span></div>
-          <div id="linea"></div>
-        </div>
+        <div id="barras"></div>
+        <button class="vertabla" id="btnTabla">Ver los datos en tabla</button>
+        <table class="tb" id="tabla"></table>
       </div>
       <div>
-        <div class="panel locked" id="pAlertas">
-          <div class="ph">Lo que el sistema vio sin que nadie preguntara</div>
-          <div id="alertas"></div>
+        <div class="panel" id="pMargen">
+          <div class="ph"><span>Lo que deja cada frente</span><span style="color:#66757F">margen</span></div>
+          <div id="margen"></div>
         </div>
-        <div class="panel locked" id="pChat">
-          <div class="ph">Pregúntele al negocio como le preguntaría a un empleado</div>
-          <div class="chips" id="chips"></div>
-          <div class="resp" id="resp"><p style="color:#6D7A84">Toque una pregunta.</p></div>
+        <div class="panel" id="pLinea">
+          <div class="ph"><span>Mes a mes</span><span style="color:#66757F">▬ promedio presupuestado</span></div>
+          <div id="linea"></div>
         </div>
       </div>
     </div>
   </div>
 </article>
 
-<!-- 10 · CAP 06 -->
-<article class="page" data-cap="06 · Cómo trabajamos" data-idx="9">
+<!-- 10 · CAP 05 · le avisa -->
+<article class="page dark" data-cap="05 · Y si no pregunta, le avisa" data-idx="9" data-night="1" id="pgAvisa">
+  <div class="in top">
+    <div class="kick">Capítulo cinco · y cuando usted no pregunta</div>
+    <h2 class="tit" style="margin-bottom:10px">No hay que estar mirando el tablero.</h2>
+    <p class="bajada" style="margin-bottom:26px">Esto es lo que el sistema encontró solo, sin que nadie le preguntara nada. Así se ve un lunes en el que la reunión ya empieza sabiendo.</p>
+
+    <div class="gr2">
+      <div>
+        <div class="panel">
+          <div class="ph"><span>Lo que vio sin que nadie preguntara</span><span id="stampT" style="color:#66757F">—</span></div>
+          <div id="alertas"></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="ph">El año en un vistazo</div>
+          <div class="kpis">
+            <div class="kpi"><div class="kl">Gastado en el año</div><div class="kv" id="k1">—</div><div class="ks">millones de pesos</div></div>
+            <div class="kpi"><div class="kl">Del presupuesto</div><div class="kv" id="k2">—</div><div class="ks" id="k2s">—</div></div>
+            <div class="kpi"><div class="kl">Rubros en alerta</div><div class="kv alerta" id="k3">—</div><div class="ks">de seis</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="ph">Hacia dónde va</div>
+          <div id="proy"></div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:24px;font-family:var(--ui);font-size:12.5px;color:#66757F;max-width:74ch">
+      Las cifras de este ejemplo son inventadas. La mecánica no: es la misma que opera hoy con datos reales de empresas reales.</p>
+  </div>
+</article>
+
+<!-- 11 · CAP 06 -->
+<article class="page" data-cap="06 · Cómo trabajamos" data-idx="10">
   <div class="in top">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:12px">
       <div><div class="kick">Capítulo seis</div><h2 class="tit" style="margin-bottom:8px">Por partes, y usted aprueba cada una.</h2></div>
@@ -560,8 +611,8 @@ table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-in
   </div>
 </article>
 
-<!-- 11 · CAP 07 -->
-<article class="page" data-cap="07 · Quiénes ya confían" data-idx="10">
+<!-- 12 · CAP 07 -->
+<article class="page" data-cap="07 · Quiénes ya confían" data-idx="11">
   <div class="in top">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:20px">
       <div><div class="kick">Capítulo siete</div><h2 class="tit" style="margin-bottom:8px">Quiénes ya trabajan así.</h2></div>
@@ -583,12 +634,12 @@ table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-in
   </div>
 </article>
 
-<!-- 12 · CONTRAPORTADA -->
-<article class="page" data-cap="Hablemos" data-idx="11">
+<!-- 13 · CONTRAPORTADA -->
+<article class="page" data-cap="Hablemos" data-idx="12">
   <div class="in fin">
     <div class="kick">Última página</div>
-    <h2>Empecemos por lo que hoy le está costando plata.</h2>
-    <p class="l">Una conversación de media hora suele bastar para saber si tenemos algo que aportarle. Si no lo tenemos, se lo decimos.</p>
+    <h2>Que el próximo lunes la reunión empiece por la decisión.</h2>
+    <p class="l">Y no por discutir cuál de los tres números es el bueno. Una conversación de media hora suele bastar para saber si tenemos algo que aportarle. Si no lo tenemos, se lo decimos.</p>
     <div class="vias">
       <div><div class="k">Escríbanos</div><div class="v"><a href="mailto:alex.zapata@datainsightscol.com">alex.zapata@datainsightscol.com</a></div></div>
       <div><div class="k">Sitio</div><div class="v"><a href="https://datainsightsco.com" target="_blank" rel="noopener">datainsightsco.com</a></div></div>
@@ -601,11 +652,12 @@ table.tb td:first-child,table.tb th:first-child{text-align:left;color:var(--d-in
 
 </div></div>
 
-<div class="more" id="more">Siga bajando en esta página ↓</div>
 <footer class="folio">
   <span class="mono" id="fLeft">DataInsights Colombia</span>
-  <div class="pg"><span class="mono" id="fPg">1 / 12</span><span class="bar"><i id="fBar"></i></span></div>
+  <div class="pg"><span class="mono" id="fPg">1 / 13</span><span class="bar"><i id="fBar"></i></span></div>
 </footer>
+
+<div class="more" id="more">Siga bajando en esta página ↓</div>
 
 <button class="nv prev" id="prev" aria-label="Página anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 19l-7-7 7-7"/></svg></button>
 <button class="nv next" id="next" aria-label="Página siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 5l7 7-7 7"/></svg></button>
@@ -638,15 +690,17 @@ var $=function(s,c){return (c||document).querySelector(s)},
 /* ================= PAGINADOR ================= */
 var track=$('#track'), pages=$$('.page'), N=pages.length, cur=0, moving=false;
 var TOC=[
- {n:'—',  t:'Portada',                 p:0},
- {n:'01', t:'La escena',               p:2},
- {n:'02', t:'El diagnóstico',          p:3},
- {n:'03', t:'¿En cuál se reconoce?',   p:4},
- {n:'04', t:'Qué hacemos',             p:6},
- {n:'05', t:'El ecosistema, en vivo',  p:7},
- {n:'06', t:'Cómo trabajamos',         p:9},
- {n:'07', t:'Quiénes ya confían',      p:10},
- {n:'—',  t:'Hablemos',                p:11}
+ {n:'—',  t:'Portada',                       p:0},
+ {n:'01', t:'La escena',                     p:2},
+ {n:'02', t:'El diagnóstico',                p:3},
+ {n:'03', t:'¿En cuál se reconoce?',         p:4},
+ {n:'04', t:'Qué hacemos',                   p:6},
+ {n:'05', t:'El ecosistema',                 p:7},
+ {n:'',   t:'Usted pregunta, le responde',   p:8},
+ {n:'',   t:'Y si no pregunta, le avisa',    p:9},
+ {n:'06', t:'Cómo trabajamos',               p:10},
+ {n:'07', t:'Quiénes ya confían',            p:11},
+ {n:'—',  t:'Hablemos',                      p:12}
 ];
 function pintarTOC(el){
   if(!el)return; el.innerHTML='';
@@ -659,22 +713,18 @@ function pintarTOC(el){
 }
 pintarTOC($('#toc')); pintarTOC($('#toc2'));
 
-function chkMore(){
-  var pg=pages[cur];
-  $('#more').classList.toggle('on', pg.scrollHeight-pg.clientHeight>18 && pg.scrollTop<8);
-}
+function chkMore(){var pg=pages[cur];
+  $('#more').classList.toggle('on', pg.scrollHeight-pg.clientHeight>18 && pg.scrollTop<8);}
 function go(i){
   i=Math.max(0,Math.min(N-1,i)); if(i===cur&&!moving)return sync();
-  cur=i; moving=true;
-  track.style.transform='translateX(-'+(i*100)+'%)';
-  setTimeout(function(){moving=false;},740);
-  sync(); alEntrar(i);
+  cur=i; moving=true; track.style.transform='translateX(-'+(i*100)+'%)';
+  setTimeout(function(){moving=false},740); sync(); alEntrar(i);
 }
 function sync(){
   var pg=pages[cur];
   $('#mCap').textContent=pg.dataset.cap;
   $('#fPg').textContent=(cur+1)+' / '+N;
-  $('#fBar').style.width=((cur)/(N-1)*100)+'%';
+  $('#fBar').style.width=(cur/(N-1)*100)+'%';
   document.body.classList.toggle('night', pg.dataset.night==='1');
   $('#prev').disabled=cur===0; $('#next').disabled=cur===N-1;
   pg.scrollTop=0; setTimeout(chkMore,60);
@@ -687,26 +737,23 @@ addEventListener('keydown',function(e){
   if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
   if(e.key==='Home')go(0); if(e.key==='End')go(N-1);
 });
-/* swipe */
 var tx=0,ty=0;
-$('#reader').addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+$('#reader').addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 $('#reader').addEventListener('touchend',function(e){
   var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
   if(Math.abs(dx)>56&&Math.abs(dx)>Math.abs(dy)*1.4) go(cur+(dx<0?1:-1));
 },{passive:true});
-/* rueda: solo si la página no tiene scroll propio */
 var acc=0,cool=false;
 $('#reader').addEventListener('wheel',function(e){
-  var pg=pages[cur];
-  if(pg.scrollHeight-pg.clientHeight>12) return;
+  var pg=pages[cur]; if(pg.scrollHeight-pg.clientHeight>12) return;
   acc+=e.deltaY; if(cool)return;
-  if(Math.abs(acc)>90){ go(cur+(acc>0?1:-1)); acc=0; cool=true; setTimeout(function(){cool=false},820); }
+  if(Math.abs(acc)>90){go(cur+(acc>0?1:-1));acc=0;cool=true;setTimeout(function(){cool=false},820);}
 },{passive:true});
-/* índice */
 function abrirIdx(){$('#idx').classList.add('on')} function cerrarIdx(){$('#idx').classList.remove('on')}
 $('#btnIdx').addEventListener('click',abrirIdx); $('#btnCerrar').addEventListener('click',cerrarIdx);
+pages.forEach(function(p){p.addEventListener('scroll',chkMore,{passive:true})});
 
-/* ================= CIFRAS QUE SUBEN ================= */
+/* ================= CIFRAS DEL CAPÍTULO 1 ================= */
 var cifrasHechas=false;
 function correrCifras(){
   if(cifrasHechas)return; cifrasHechas=true;
@@ -736,11 +783,15 @@ var FRE=[{n:'Frente Norte',v:780,c:690},{n:'Frente Centro',v:640,c:505},{n:'Fren
 FRE.forEach(function(f){f.mg=f.v-f.c;f.pc=f.mg/f.v*100});
 var PEOR=FRE.slice().sort(function(a,b){return a.pc-b.pc})[0],
     MEJOR=FRE.slice().sort(function(a,b){return b.pc-a.pc})[0];
+var MAT=RUB[1];
+MAT.g=Math.pow(((MAT.m[9]+MAT.m[10]+MAT.m[11])/3)/((MAT.m[0]+MAT.m[1]+MAT.m[2])/3),1/9)-1;
+MAT.proy=[]; (function(){var x=MAT.m[11];for(var i=0;i<12;i++){x=x*(1+MAT.g);MAT.proy.push(x);}})();
+MAT.proyTot=MAT.proy.reduce(function(a,b){return a+b},0);
 function fm(n,d){d=d==null?0:d;var s=Math.abs(n).toFixed(d).split('.');
   s[0]=s[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');return (n<0?'-':'')+s.join(',');}
 function mm(n){return '$ '+fm(n)+' millones';}
 
-/* ================= CABLES ================= */
+/* ================= CABLES DEL DIAGRAMA ================= */
 var wires=$('#wires'),flujo=$('.flujo'),nuc=$('#nucleo'),dots=[],flowing=false;
 function drawWires(){
   if(!wires||innerWidth<901){dots=[];return;}
@@ -754,15 +805,14 @@ function drawWires(){
     wires.appendChild(p);ps.push(p);
   }
   $$('#colf .fuente').forEach(function(el){var b=el.getBoundingClientRect();
-    mk(b.right-fb.left,b.top-fb.top+b.height/2,nx-nb.width/2+5,ny);});
+    mk(b.right-fb.left,b.top-fb.top+b.height/2,nx-nb.width/2+5,ny)});
   $$('#cols .salida').forEach(function(el){var b=el.getBoundingClientRect();
-    mk(nx+nb.width/2-5,ny,b.left-fb.left,b.top-fb.top+b.height/2);});
+    mk(nx+nb.width/2-5,ny,b.left-fb.left,b.top-fb.top+b.height/2)});
   dots=[];
-  ps.forEach(function(p){ for(var k=0;k<2;k++){
+  ps.forEach(function(p){for(var k=0;k<2;k++){
     var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
     c.setAttribute('r','2.2');c.setAttribute('fill','#2ECCE8');c.setAttribute('opacity','0');
-    wires.appendChild(c);
-    dots.push({p:p,t:Math.random(),sp:.0028+Math.random()*.0018,el:c,L:p.getTotalLength()});
+    wires.appendChild(c); dots.push({p:p,t:Math.random(),sp:.0028+Math.random()*.0018,el:c,L:p.getTotalLength()});
   }});
 }
 (function tick(){
@@ -775,7 +825,7 @@ function drawWires(){
   requestAnimationFrame(tick);
 })();
 
-/* ================= GRÁFICAS ================= */
+/* ================= UTILIDADES SVG ================= */
 var NS='http://www.w3.org/2000/svg';
 function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
 var tip=document.createElement('div');tip.className='tip';document.body.appendChild(tip);
@@ -784,58 +834,93 @@ function showTip(x,y,h){tip.innerHTML=h;tip.style.opacity=1;
   tip.style.left=Math.min(Math.max(x-w/2,8),innerWidth-w-8)+'px';tip.style.top=(y-ht-14)+'px';}
 function hideTip(){tip.style.opacity=0}
 
+/* ================= GRÁFICA 1 · rubros (barra con marca de presupuesto) ================= */
+var refBar={};
 function drawBar(anim){
   var host=$('#barras'); if(!host||!host.clientWidth)return;
-  var W=host.clientWidth,LB=Math.min(104,W*.29),RB=56,rowH=46,H=RUB.length*rowH+4;
-  var max=Math.max.apply(null,RUB.map(function(r){return Math.max(r.ppto,r.eje)}))*1.02,k=(W-LB-RB)/max;
+  refBar={};
+  var W=host.clientWidth,LB=Math.min(106,W*.28),RB=68,rowH=38,H=RUB.length*rowH+6;
+  var max=Math.max.apply(null,RUB.map(function(r){return Math.max(r.ppto,r.eje)}))*1.04,k=(W-LB-RB)/max;
   var s=sv('svg',{width:W,height:H,style:'display:block'});
   RUB.forEach(function(r,i){
-    var y=i*rowH+6, tl=sv('text',{x:0,y:y+12,fill:'#9CA8B2','font-size':'12','font-family':'inherit'});
-    tl.textContent=r.n; s.appendChild(tl);
-    s.appendChild(sv('rect',{x:LB,y:y+1,width:Math.max(r.ppto*k,3),height:9,rx:3,fill:'#3D4A55'}));
+    var y=i*rowH+8, g=sv('g',{style:'transition:opacity .4s'});
+    var tl=sv('text',{x:0,y:y+12,fill:'#9CA8B2','font-size':'12','font-family':'inherit'}); tl.textContent=r.n; g.appendChild(tl);
+    g.appendChild(sv('rect',{x:LB,y:y+2,width:W-LB-RB,height:13,rx:2,fill:'rgba(255,255,255,.045)'}));
     var base=Math.min(r.eje,r.ppto), ex=Math.max(r.eje-r.ppto,0);
-    var b1=sv('rect',{x:LB,y:y+15,width:0,height:9,rx:3,fill:'#1E9FB8'}); s.appendChild(b1);
-    var b2=null; if(ex>0){b2=sv('rect',{x:LB+base*k+2,y:y+15,width:0,height:9,rx:3,fill:'#D03B3B'});s.appendChild(b2);}
-    var lb=sv('text',{x:LB,y:y+23,fill:'#F2F5F7','font-size':'12','font-family':'inherit',opacity:0});
-    lb.textContent=fm(r.eje); s.appendChild(lb);
-    var hit=sv('rect',{x:0,y:y-5,width:W,height:rowH-3,fill:'transparent'}); s.appendChild(hit);
+    var b1=sv('rect',{x:LB,y:y+2,width:0,height:13,rx:2,fill:'#1E9FB8'}); g.appendChild(b1);
+    var b2=null; if(ex>0){b2=sv('rect',{x:LB+base*k+2,y:y+2,width:0,height:13,rx:2,fill:'#D03B3B'}); g.appendChild(b2);}
+    g.appendChild(sv('rect',{x:LB+r.ppto*k,y:y-2,width:2,height:21,fill:'#DCE3E8'}));
+    var lb=sv('text',{x:LB,y:y+13,fill:'#F2F5F7','font-size':'12','font-family':'inherit',opacity:0});
+    lb.textContent=fm(r.eje)+(r.dif>0?'  +'+fm(r.pc,0)+'%':''); g.appendChild(lb);
+    var hit=sv('rect',{x:0,y:y-4,width:W,height:rowH-2,fill:'transparent'}); g.appendChild(hit);
     hit.addEventListener('mousemove',function(e){
-      showTip(e.clientX,e.clientY,'<b>'+r.n+'</b><br>Presupuesto '+fm(r.ppto)+' · Ejecutado '+fm(r.eje)+'<br>'+
-        (r.dif>0?'<span style="color:#FF8080">+'+fm(r.dif)+' ('+fm(r.pc,1)+'%)</span>'
-                :'<span style="color:#7ADB7A">'+fm(r.dif)+' ('+fm(r.pc,1)+'%)</span>'));});
+      showTip(e.clientX,e.clientY,'<b>'+r.n+'</b><br>Presupuesto '+fm(r.ppto)+' · Gastado '+fm(r.eje)+'<br>'+
+        (r.dif>0?'<span style="color:#FF8080">'+fm(r.dif)+' de más ('+fm(r.pc,1)+'%)</span>'
+                :'<span style="color:#7ADB7A">'+fm(Math.abs(r.dif))+' por debajo</span>'));});
     hit.addEventListener('mouseleave',hideTip);
+    s.appendChild(g); refBar[r.n]=g;
     function run(){ b1.setAttribute('width',Math.max(base*k,3));
       if(b2)b2.setAttribute('width',Math.max(ex*k,3));
-      lb.setAttribute('x',LB+r.eje*k+(ex>0?10:8)); lb.setAttribute('opacity',1); }
-    if(anim){ b1.style.transition='width .85s cubic-bezier(.16,1,.3,1)';
-      if(b2)b2.style.transition='width .85s cubic-bezier(.16,1,.3,1) .2s';
-      lb.style.transition='opacity .5s .85s'; setTimeout(run,100+i*80);
+      lb.setAttribute('x',LB+Math.max(r.eje,r.ppto)*k+12); lb.setAttribute('opacity',1); }
+    if(anim){ b1.style.transition='width .8s cubic-bezier(.16,1,.3,1)';
+      if(b2)b2.style.transition='width .8s cubic-bezier(.16,1,.3,1) .18s';
+      lb.style.transition='opacity .5s .8s'; setTimeout(run,90+i*70);
     } else run();
   });
   host.innerHTML=''; host.appendChild(s);
 }
-function drawLine(anim){
+
+/* ================= GRÁFICA 2 · margen por frente ================= */
+var refFre={};
+function drawMargen(anim){
+  var host=$('#margen'); if(!host||!host.clientWidth)return;
+  refFre={};
+  var W=host.clientWidth,LB=Math.min(104,W*.36),RB=52,rowH=38,H=FRE.length*rowH+4,max=25,k=(W-LB-RB)/max;
+  var s=sv('svg',{width:W,height:H,style:'display:block'});
+  FRE.forEach(function(f,i){
+    var y=i*rowH+8,g=sv('g',{style:'transition:opacity .4s'});
+    var tl=sv('text',{x:0,y:y+12,fill:'#9CA8B2','font-size':'12','font-family':'inherit'});tl.textContent=f.n;g.appendChild(tl);
+    g.appendChild(sv('rect',{x:LB,y:y+2,width:W-LB-RB,height:13,rx:2,fill:'rgba(255,255,255,.045)'}));
+    var b=sv('rect',{x:LB,y:y+2,width:0,height:13,rx:2,fill:f===PEOR?'#FAB219':'#1E9FB8'});g.appendChild(b);
+    var lb=sv('text',{x:LB,y:y+13,fill:'#F2F5F7','font-size':'12','font-family':'inherit',opacity:0});
+    lb.textContent=fm(f.pc,1)+'%';g.appendChild(lb);
+    var hit=sv('rect',{x:0,y:y-4,width:W,height:rowH-2,fill:'transparent'});g.appendChild(hit);
+    hit.addEventListener('mousemove',function(e){showTip(e.clientX,e.clientY,
+      '<b>'+f.n+'</b><br>Vende '+fm(f.v)+' · le cuesta '+fm(f.c)+'<br>Le quedan <b>'+fm(f.mg)+' millones</b>');});
+    hit.addEventListener('mouseleave',hideTip);
+    s.appendChild(g);refFre[f.n]=g;
+    function run(){b.setAttribute('width',Math.max(f.pc*k,3));
+      lb.setAttribute('x',LB+f.pc*k+10);lb.setAttribute('opacity',1);}
+    if(anim){b.style.transition='width .8s cubic-bezier(.16,1,.3,1)';lb.style.transition='opacity .5s .8s';
+      setTimeout(run,90+i*70);} else run();
+  });
+  host.innerHTML='';host.appendChild(s);
+}
+
+/* ================= GRÁFICA 3 · mes a mes ================= */
+var refMes=null;
+function drawLinea(anim){
   var host=$('#linea'); if(!host||!host.clientWidth)return;
-  var W=host.clientWidth,H=178,L=42,R=12,T=14,B=26;
-  var max=Math.max.apply(null,MESES)*1.18, pm=TOT_P/12;
+  var W=host.clientWidth,H=150,L=10,R=12,T=12,B=24;
+  var max=Math.max.apply(null,MESES)*1.16,pm=TOT_P/12;
   function xs(i){return L+i*(W-L-R)/11} function ys(v){return T+(1-v/max)*(H-T-B)}
   var s=sv('svg',{width:W,height:H,style:'display:block'});
-  [0,.5,1].forEach(function(f){var v=max*f;
-    s.appendChild(sv('line',{x1:L,x2:W-R,y1:ys(v),y2:ys(v),stroke:'rgba(255,255,255,.07)','stroke-width':1}));
-    var t=sv('text',{x:0,y:ys(v)+4,fill:'#6D7A84','font-size':'10.5','font-family':'inherit'});t.textContent=fm(v);s.appendChild(t);});
-  s.appendChild(sv('line',{x1:L,x2:W-R,y1:ys(pm),y2:ys(pm),stroke:'#6D7A84','stroke-width':1,'stroke-dasharray':'4 4'}));
-  var d=''; MESES.forEach(function(v,i){d+=(i?' L':'M')+xs(i)+','+ys(v);});
-  var df=sv('defs',{}),g=sv('linearGradient',{id:'gz',x1:0,y1:0,x2:0,y2:1});
-  g.appendChild(sv('stop',{offset:'0%','stop-color':'#1E9FB8','stop-opacity':.28}));
-  g.appendChild(sv('stop',{offset:'100%','stop-color':'#1E9FB8','stop-opacity':0}));
-  df.appendChild(g); s.appendChild(df);
+  s.appendChild(sv('line',{x1:L,x2:W-R,y1:ys(pm),y2:ys(pm),stroke:'#5B6975','stroke-width':1,'stroke-dasharray':'4 4'}));
+  var d='';MESES.forEach(function(v,i){d+=(i?' L':'M')+xs(i)+','+ys(v)});
+  var df=sv('defs',{}),gr=sv('linearGradient',{id:'gz',x1:0,y1:0,x2:0,y2:1});
+  gr.appendChild(sv('stop',{offset:'0%','stop-color':'#1E9FB8','stop-opacity':.3}));
+  gr.appendChild(sv('stop',{offset:'100%','stop-color':'#1E9FB8','stop-opacity':0}));
+  df.appendChild(gr);s.appendChild(df);
   s.appendChild(sv('path',{d:'M'+xs(0)+','+ys(0)+' '+d.slice(1)+' L'+xs(11)+','+ys(0)+' Z',fill:'url(#gz)'}));
   var p=sv('path',{d:d,fill:'none',stroke:'#1E9FB8','stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'});
   s.appendChild(p);
   if(anim){var Ln=p.getTotalLength();p.style.strokeDasharray=Ln;p.style.strokeDashoffset=Ln;
-    p.style.transition='stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1)';setTimeout(function(){p.style.strokeDashoffset=0},60);}
-  MESES.forEach(function(v,i){var t=sv('text',{x:xs(i),y:H-7,fill:'#6D7A84','font-size':'10','text-anchor':'middle','font-family':'inherit'});
-    t.textContent=MES[i];s.appendChild(t);});
+    p.style.transition='stroke-dashoffset 1s cubic-bezier(.16,1,.3,1)';setTimeout(function(){p.style.strokeDashoffset=0},60);}
+  [0,11].forEach(function(i){var t=sv('text',{x:xs(i),y:H-6,fill:'#66757F','font-size':'10',
+    'text-anchor':i?'end':'start','font-family':'inherit'});t.textContent=MES[i];s.appendChild(t);});
+  var foco=sv('g',{opacity:0,style:'transition:opacity .4s'});
+  [10,11].forEach(function(i){foco.appendChild(sv('circle',{cx:xs(i),cy:ys(MESES[i]),r:5,fill:'#12161A',stroke:'#2ECCE8','stroke-width':2}));});
+  s.appendChild(foco); refMes=foco;
   var cr=sv('line',{x1:0,x2:0,y1:T,y2:H-B,stroke:'rgba(46,204,232,.5)','stroke-width':1,opacity:0}),
       mk=sv('circle',{r:4.5,fill:'#12161A',stroke:'#2ECCE8','stroke-width':2,opacity:0});
   s.appendChild(cr);s.appendChild(mk);
@@ -844,19 +929,107 @@ function drawLine(anim){
     var bb=s.getBoundingClientRect(),i=Math.max(0,Math.min(11,Math.round((e.clientX-bb.left-L)/((W-L-R)/11))));
     cr.setAttribute('x1',xs(i));cr.setAttribute('x2',xs(i));cr.setAttribute('opacity',1);
     mk.setAttribute('cx',xs(i));mk.setAttribute('cy',ys(MESES[i]));mk.setAttribute('opacity',1);
-    showTip(bb.left+xs(i),bb.top+ys(MESES[i]),'<b>'+MES[i]+'</b> · '+fm(MESES[i])+' millones<br><span style="color:#9CA8B2">promedio presupuestado '+fm(pm)+'</span>');});
-  hit.addEventListener('mouseleave',function(){cr.setAttribute('opacity',0);mk.setAttribute('opacity',0);hideTip();});
+    showTip(bb.left+xs(i),bb.top+ys(MESES[i]),'<b>'+MES[i]+'</b> · '+fm(MESES[i])+' millones');});
+  hit.addEventListener('mouseleave',function(){cr.setAttribute('opacity',0);mk.setAttribute('opacity',0);hideTip()});
   host.innerHTML='';host.appendChild(s);
 }
+
+/* ================= GRÁFICA 4 · proyección de Materiales ================= */
+function drawProy(anim){
+  var host=$('#proy'); if(!host||!host.clientWidth)return;
+  var W=host.clientWidth,H=168,L=10,R=12,T=26,B=30;
+  var todo=MAT.m.concat(MAT.proy),max=Math.max.apply(null,todo)*1.2;
+  function xs(i){return L+i*(W-L-R)/23} function ys(v){return T+(1-v/max)*(H-T-B)}
+  var s=sv('svg',{width:W,height:H,style:'display:block'});
+  s.appendChild(sv('rect',{x:xs(12),y:T-8,width:W-R-xs(12),height:H-T-B+14,fill:'rgba(208,59,59,.06)'}));
+  var d1='';MAT.m.forEach(function(v,i){d1+=(i?' L':'M')+xs(i)+','+ys(v)});
+  var d2='M'+xs(11)+','+ys(MAT.m[11]);MAT.proy.forEach(function(v,i){d2+=' L'+xs(12+i)+','+ys(v)});
+  s.appendChild(sv('path',{d:d1,fill:'none',stroke:'#1E9FB8','stroke-width':2,'stroke-linecap':'round'}));
+  var p2=sv('path',{d:d2,fill:'none',stroke:'#D03B3B','stroke-width':2,'stroke-dasharray':'5 4','stroke-linecap':'round'});
+  s.appendChild(p2);
+  if(anim){var Ln=p2.getTotalLength();p2.style.strokeDasharray=Ln;p2.style.strokeDashoffset=Ln;
+    p2.style.transition='stroke-dashoffset 1.1s .3s cubic-bezier(.16,1,.3,1)';
+    setTimeout(function(){p2.style.strokeDashoffset=0;setTimeout(function(){p2.style.strokeDasharray='5 4'},1500)},60);}
+  var t1=sv('text',{x:L,y:14,fill:'#9CA8B2','font-size':'10.5','font-family':'inherit'});
+  t1.textContent='Materiales · lo que va del año';s.appendChild(t1);
+  var t2=sv('text',{x:W-R,y:14,fill:'#E8827A','font-size':'10.5','text-anchor':'end','font-family':'inherit'});
+  t2.textContent='si sigue al mismo ritmo';s.appendChild(t2);
+  var t3=sv('text',{x:L,y:H-8,fill:'#66757F','font-size':'10.5','font-family':'inherit'});
+  t3.textContent='Presupuestado hoy: '+fm(MAT.ppto);s.appendChild(t3);
+  var t4=sv('text',{x:W-R,y:H-8,fill:'#E8827A','font-size':'11','text-anchor':'end','font-family':'inherit','font-weight':'600'});
+  t4.textContent='Próximo año: '+fm(MAT.proyTot);s.appendChild(t4);
+  host.innerHTML='';host.appendChild(s);
+}
+
+/* ================= FOCO ================= */
+function foco(f){
+  var hayB=f&&f.bar, hayF=f&&f.fre;
+  Object.keys(refBar).forEach(function(k){
+    refBar[k].setAttribute('opacity', !hayB?1:(f.bar.indexOf(k)>=0?1:.22)); });
+  Object.keys(refFre).forEach(function(k){
+    refFre[k].setAttribute('opacity', !hayF?1:(f.fre.indexOf(k)>=0?1:.22)); });
+  if(refMes) refMes.setAttribute('opacity', (f&&f.mes)?1:0);
+}
+
+/* ================= PREGUNTAS ================= */
+var Q=[
+ {q:'¿En qué me estoy pasando del presupuesto?', f:{bar:['Materiales','Transporte']}, a:function(){
+   var t=SOBRE.reduce(function(s,r){return s+r.dif},0);
+   var s='Se está pasando en <b>'+SOBRE.length+' rubros</b>. El más grande es <b>'+SOBRE[0].n+'</b>: presupuestó '+mm(SOBRE[0].ppto)+' y va en '+mm(SOBRE[0].eje)+', o sea <b>'+mm(SOBRE[0].dif)+' por encima</b> ('+fm(SOBRE[0].pc,1)+'%). ';
+   if(SOBRE[1])s+='Le sigue '+SOBRE[1].n+', con '+fm(SOBRE[1].pc,1)+'% de más. ';
+   s+='Sumados, el sobrecosto va en <b>'+mm(t)+'</b>. Del otro lado, Mantenimiento va '+fm(Math.abs(RUB[4].pc),1)+'% por debajo: ahí hay con qué tapar una parte.';
+   return s;}},
+ {q:'¿Cuál frente me deja menos plata?', f:{fre:['Frente Sur']}, a:function(){
+   var g=PEOR.v*(MEJOR.pc/100)-PEOR.mg;
+   return '<b>'+PEOR.n+'</b>. Vende '+mm(PEOR.v)+' y le cuesta '+mm(PEOR.c)+': le quedan '+mm(PEOR.mg)+', un margen de <b>'+fm(PEOR.pc,1)+'%</b>. Para comparar, '+MEJOR.n+' vende menos que Frente Norte pero deja '+mm(MEJOR.mg)+' ('+fm(MEJOR.pc,1)+'%). Si '+PEOR.n+' trabajara con el margen de '+MEJOR.n+', hoy tendría <b>'+mm(g)+' más</b> en el bolsillo.';}},
+ {q:'¿Cómo voy este mes contra el anterior?', f:{mes:true}, a:function(){
+   var u=MESES[11],p=MESES[10],v=(u-p)/p*100,pr=TOT_E/12;
+   return 'En el último mes gastó '+mm(u)+', contra '+mm(p)+' del mes anterior: <b>'+(v>0?'+':'')+fm(v,1)+'%</b>. Pero el promedio del año va en '+mm(pr)+' mensuales, así que el último mes está <b>'+fm((u-pr)/pr*100,1)+'% por encima de su propio ritmo</b>. No es un mes malo suelto: es la tendencia.';}},
+ {q:'Si Materiales sigue subiendo igual, ¿en qué termino?', f:{bar:['Materiales']}, a:function(){
+   return 'Materiales viene creciendo <b>'+fm(MAT.g*100,1)+'% al mes</b>: arrancó el año en '+mm((MAT.m[0]+MAT.m[1]+MAT.m[2])/3)+' mensuales y va en '+mm((MAT.m[9]+MAT.m[10]+MAT.m[11])/3)+'. Si sigue a ese ritmo, el próximo año ese solo rubro le costaría <b>'+mm(MAT.proyTot)+'</b>, cuando hoy lo presupuesta en '+mm(MAT.ppto)+'. Son <b>'+mm(MAT.proyTot-MAT.ppto)+' de diferencia</b>, y todavía está a tiempo de renegociar.';}}
+];
+var tmr=null;
+function escribir(el,html,vel,fin){
+  if(tmr)clearTimeout(tmr);
+  var toks=[],i=0;
+  while(i<html.length){ if(html[i]==='<'){var j=html.indexOf('>',i);toks.push(html.slice(i,j+1));i=j+1;} else {toks.push(html[i]);i++;} }
+  var out='',k=0; el.classList.add('cur');
+  (function nx(){ if(k>=toks.length){el.classList.remove('cur');el.innerHTML=out;if(fin)fin();return;}
+    var d=toks[k][0]==='<'?0:vel; out+=toks[k];k++;el.innerHTML=out; tmr=setTimeout(nx,d); })();
+}
+function pintarChips(){
+  var c=$('#chips'); if(c.children.length)return;
+  Q.forEach(function(o){
+    var b=document.createElement('button');b.className='chip';b.textContent=o.q;
+    b.addEventListener('click',function(){
+      $$('.chip',c).forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+      foco(null);
+      var bar=$('#askQ');bar.classList.remove('vacio');bar.textContent='';
+      var r=$('#resp');r.innerHTML='';
+      escribir(bar,o.q,26,function(){
+        foco(o.f);
+        r.innerHTML='<div class="who"><i></i>Respondiendo con sus datos</div><p></p>';
+        escribir($('p',r),o.a(),13,function(){
+          var pg=$('#pgAsk'), g=$('.gr2',pg);
+          if(pg.scrollHeight-pg.clientHeight>20)
+            pg.scrollTo({top:g.offsetTop-90,behavior:'smooth'});
+        });
+      });
+    });
+    c.appendChild(b);
+  });
+}
+
+/* ================= TABLERO Y ALERTAS ================= */
 function pintarKPIs(){
   $('#k1').textContent=fm(TOT_E);
   $('#k2').textContent=fm(TOT_E/TOT_P*100,1)+'%';
   $('#k2s').textContent='presupuestado: '+fm(TOT_P);
   $('#k3').textContent=SOBRE.length;
-  $('#stampT').textContent='actualizado hace 2 minutos';
+  $('#stampT').textContent='hace 2 minutos';
 }
 function pintarTabla(){
-  var h='<tr><th>Rubro</th><th>Presupuesto</th><th>Ejecutado</th><th>Diferencia</th></tr>';
+  var h='<tr><th>Rubro</th><th>Presupuesto</th><th>Gastado</th><th>Diferencia</th></tr>';
   RUB.forEach(function(r){h+='<tr><td>'+r.n+'</td><td>'+fm(r.ppto)+'</td><td>'+fm(r.eje)+'</td><td style="color:'+(r.dif>0?'#FF8080':'#8FA3AD')+'">'+(r.dif>0?'+':'')+fm(r.dif)+'</td></tr>';});
   h+='<tr><th>Total</th><th>'+fm(TOT_P)+'</th><th>'+fm(TOT_E)+'</th><th>'+(TOT_E>TOT_P?'+':'')+fm(TOT_E-TOT_P)+'</th></tr>';
   $('#tabla').innerHTML=h;
@@ -864,91 +1037,42 @@ function pintarTabla(){
 $('#btnTabla').addEventListener('click',function(){
   var t=$('#tabla');t.classList.toggle('on');
   this.textContent=t.classList.contains('on')?'Ocultar la tabla':'Ver los datos en tabla';});
-
+var alertasHechas=false;
 function pintarAlertas(){
-  var h=$('#alertas');h.innerHTML='';var a=[];
-  if(SOBRE[0])a.push({c:'crit',t:'Sobrecosto',x:'<b>'+SOBRE[0].n+'</b> ya se pasó del presupuesto del año en <b>'+mm(SOBRE[0].dif)+'</b> ('+fm(SOBRE[0].pc,1)+'% por encima) y todavía falta operación por delante.'});
-  if(SOBRE[1])a.push({c:'',t:'Atención',x:'<b>'+SOBRE[1].n+'</b> va '+fm(SOBRE[1].pc,1)+'% por encima de lo presupuestado. Es el segundo rubro que se sale.'});
-  a.push({c:'',t:'Margen',x:'<b>'+PEOR.n+'</b> es el que menos deja: '+fm(PEOR.pc,1)+'% de margen, frente al '+fm(MEJOR.pc,1)+'% de '+MEJOR.n+'.'});
+  if(alertasHechas)return; alertasHechas=true;
+  var h=$('#alertas');h.innerHTML='';var a=[
+   {c:'crit',t:'Sobrecosto',x:'<b>'+SOBRE[0].n+'</b> ya se pasó del presupuesto del año en <b>'+mm(SOBRE[0].dif)+'</b> ('+fm(SOBRE[0].pc,1)+'% por encima) y todavía falta operación por delante.'},
+   {c:'',t:'Atención',x:'<b>'+SOBRE[1].n+'</b> va '+fm(SOBRE[1].pc,1)+'% por encima de lo presupuestado. Es el segundo rubro que se sale.'},
+   {c:'',t:'Margen',x:'<b>'+PEOR.n+'</b> es el que menos deja: '+fm(PEOR.pc,1)+'% de margen, frente al '+fm(MEJOR.pc,1)+'% de '+MEJOR.n+'.'},
+   {c:'',t:'Ahorro',x:'<b>Mantenimiento</b> va '+fm(Math.abs(RUB[4].pc),1)+'% por debajo de lo presupuestado: hay '+mm(Math.abs(RUB[4].dif))+' sin usar.'}];
   a.forEach(function(o,i){
     var d=document.createElement('div');d.className='alerta-c '+o.c;
     d.style.cssText='opacity:0;transform:translateY(9px);transition:.5s';
     d.innerHTML='<div class="at">'+o.t+'</div><p>'+o.x+'</p>';h.appendChild(d);
-    setTimeout(function(){d.style.opacity=1;d.style.transform='none'},220+i*300);});
+    setTimeout(function(){d.style.opacity=1;d.style.transform='none'},220+i*280);});
 }
-var Q=[
- {q:'¿En qué me estoy pasando del presupuesto?',a:function(){
-   var t=SOBRE.reduce(function(s,r){return s+r.dif},0);
-   var s='Se está pasando en <b>'+SOBRE.length+' rubros</b>. El más grande es <b>'+SOBRE[0].n+'</b>: presupuestó '+mm(SOBRE[0].ppto)+' y va en '+mm(SOBRE[0].eje)+', o sea <b>'+mm(SOBRE[0].dif)+' por encima</b> ('+fm(SOBRE[0].pc,1)+'%). ';
-   if(SOBRE[1])s+='Le sigue '+SOBRE[1].n+', con '+fm(SOBRE[1].pc,1)+'% de más. ';
-   s+='Sumados, el sobrecosto va en <b>'+mm(t)+'</b>. Del otro lado, Mantenimiento va '+fm(Math.abs(RUB[4].pc),1)+'% por debajo: ahí hay con qué tapar una parte.';
-   return s;}},
- {q:'¿Cuál frente me deja menos plata?',a:function(){
-   var g=PEOR.v*(MEJOR.pc/100)-PEOR.mg;
-   return '<b>'+PEOR.n+'</b>. Vende '+mm(PEOR.v)+' y le cuesta '+mm(PEOR.c)+': le quedan '+mm(PEOR.mg)+', un margen de <b>'+fm(PEOR.pc,1)+'%</b>. Para comparar, '+MEJOR.n+' vende menos que Frente Norte pero deja '+mm(MEJOR.mg)+' ('+fm(MEJOR.pc,1)+'%). Si '+PEOR.n+' trabajara con el margen de '+MEJOR.n+', hoy tendría <b>'+mm(g)+' más</b> en el bolsillo.';}},
- {q:'¿Cómo voy este mes contra el anterior?',a:function(){
-   var u=MESES[11],p=MESES[10],v=(u-p)/p*100,pr=TOT_E/12;
-   return 'En el último mes ejecutó '+mm(u)+', contra '+mm(p)+' del mes anterior: <b>'+(v>0?'+':'')+fm(v,1)+'%</b>. Pero el promedio del año va en '+mm(pr)+' mensuales, así que el último mes está <b>'+fm((u-pr)/pr*100,1)+'% por encima de su propio ritmo</b>. No es un mes malo suelto: es la tendencia.';}},
- {q:'Si Materiales sigue subiendo igual, ¿en qué termino?',a:function(){
-   var m=RUB[1],ini=(m.m[0]+m.m[1]+m.m[2])/3,fin=(m.m[9]+m.m[10]+m.m[11])/3;
-   var g=Math.pow(fin/ini,1/9)-1,prox=0,x=m.m[11];
-   for(var i=0;i<12;i++){x=x*(1+g);prox+=x;}
-   return 'Materiales viene creciendo <b>'+fm(g*100,1)+'% al mes</b>: arrancó el año en '+mm(ini)+' mensuales y va en '+mm(fin)+'. Si sigue a ese ritmo, el próximo año ese solo rubro le costaría <b>'+mm(prox)+'</b>, cuando hoy lo presupuesta en '+mm(m.ppto)+'. Son <b>'+mm(prox-m.ppto)+' de diferencia</b>, y todavía está a tiempo de renegociar.';}}
-];
-var tmr=null;
-function typeHTML(el,html){
-  if(tmr)clearTimeout(tmr);
-  var toks=[],i=0;
-  while(i<html.length){ if(html[i]==='<'){var j=html.indexOf('>',i);toks.push(html.slice(i,j+1));i=j+1;} else {toks.push(html[i]);i++;} }
-  var out='',k=0; el.classList.add('cur');
-  (function nx(){ if(k>=toks.length){el.classList.remove('cur');el.innerHTML=out;return;}
-    var d=toks[k][0]==='<'?0:13; out+=toks[k];k++;el.innerHTML=out; tmr=setTimeout(nx,d); })();
-}
-function pintarChips(){
-  var c=$('#chips'); if(c.children.length)return; c.innerHTML='';
-  Q.forEach(function(o){
-    var b=document.createElement('button');b.className='chip';b.textContent=o.q;
-    b.addEventListener('click',function(){
-      $$('.chip',c).forEach(function(x){x.classList.remove('on')});b.classList.add('on');
-      var r=$('#resp');r.innerHTML='<div class="who"><i></i>Respondiendo con sus datos</div><p></p>';
-      typeHTML($('p',r),o.a());});
-    c.appendChild(b);});
-}
-
-/* ================= SECUENCIA ================= */
-var corriendo=false,yaCorrio=false;
-function marcar(i){$$('#steps div').forEach(function(d,k){d.classList.toggle('on',k===i)})}
-function correr(){
-  if(corriendo)return; corriendo=true;
-  var btn=$('#play');btn.disabled=true;btn.textContent='Andando…';
-  ['#pTablero','#pLinea','#pAlertas','#pChat'].forEach(function(s){$(s).classList.add('locked')});
-  $$('.salida').forEach(function(f){f.classList.remove('hot')});
-  marcar(0);
-  setTimeout(function(){ marcar(1); },900);
-  setTimeout(function(){ marcar(2);$('#pTablero').classList.remove('locked');$('#pLinea').classList.remove('locked');
-    pintarKPIs();pintarTabla();drawBar(true);drawLine(true); },1800);
-  setTimeout(function(){ marcar(3);$('#pAlertas').classList.remove('locked');$('#pChat').classList.remove('locked');
-    $$('.salida').forEach(function(f,i){setTimeout(function(){f.classList.add('hot')},i*240)});
-    pintarAlertas();pintarChips(); },3400);
-  setTimeout(function(){ corriendo=false;yaCorrio=true;btn.disabled=false;btn.textContent='Volver a empezar'; },5000);
-}
-$('#play').addEventListener('click',correr);
 
 /* ================= AL ENTRAR A CADA PÁGINA ================= */
+var askHecho=false,avisaHecho=false;
 function alEntrar(i){
   var pg=pages[i];
   if(pg.querySelector('#tres')) setTimeout(correrCifras,420);
-  if(pg.querySelector('#wires')){
-    setTimeout(function(){drawWires();flowing=true;
-      $$('.fuente').forEach(function(f,k){setTimeout(function(){f.classList.add('hot')},k*180)});
-      $$('.salida').forEach(function(f,k){setTimeout(function(){f.classList.add('hot')},900+k*200)});
-      setTimeout(function(){nuc.classList.add('hot')},700);
-    },380);
+  if(pg.id==='pgEco'){
+    setTimeout(function(){ drawWires(); flowing=true;
+      $$('.fuente').forEach(function(f,k){setTimeout(function(){f.classList.add('hot')},k*170)});
+      setTimeout(function(){nuc.classList.add('hot')},680);
+      $$('.salida').forEach(function(f,k){setTimeout(function(){f.classList.add('hot')},950+k*190)});
+    },350);
   }
-  if(pg.id==='pgSim'&&!yaCorrio&&!corriendo) setTimeout(correr,520);
+  if(pg.id==='pgAsk'){
+    setTimeout(function(){ pintarChips(); drawBar(!askHecho); drawMargen(!askHecho); drawLinea(!askHecho); askHecho=true; },260);
+  }
+  if(pg.id==='pgAvisa'){
+    setTimeout(function(){ pintarKPIs(); pintarTabla(); drawProy(!avisaHecho); pintarAlertas(); avisaHecho=true; },260);
+  }
 }
-pages.forEach(function(p){p.addEventListener('scroll',chkMore,{passive:true})});
-addEventListener('resize',function(){ chkMore(); drawWires(); if(yaCorrio||corriendo){drawBar();drawLine();} });
+addEventListener('resize',function(){ chkMore(); drawWires();
+  if(askHecho){drawBar();drawMargen();drawLinea();} if(avisaHecho){drawProy();} });
 sync();
 })();
 </script>

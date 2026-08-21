@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tres de cada cuatro no llegan · Edición 01</title>
+<meta name="description" content="El 75% de los pilotos de inteligencia artificial se queda en el camino. Cuatro minutos de lectura. Para usar el lunes.">
+<style>
+:root{
+  --tinta:#14263B; --papel:#F7F4EE; --papel2:#F9F7F2; --tarjeta:#FFFDF9;
+  --linea:#E2DBCD; --linea2:#DED7C9; --terra:#B0522A; --arena:#E0996E;
+  --gris:#8C8477; --texto:#4A4740; --k:1; --chr:44px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;max-width:100%;overflow:hidden;overscroll-behavior:none}
+body{
+  background:linear-gradient(180deg,#EFEAE0,#E2DCD1);
+  font-family:Georgia,'Iowan Old Style','Times New Roman',serif;
+  color:var(--tinta);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+}
+button{font-family:inherit}
+::selection{background:rgba(176,82,42,.22)}
+
+/* ---------- barra superior ---------- */
+.chrome{
+  height:var(--chr);flex:0 0 var(--chr);
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:0 22px;position:relative;z-index:30;
+}
+.marca{display:flex;align-items:baseline;gap:10px;min-width:0}
+.marca b{font:700 15px/1 Georgia,serif;letter-spacing:.01em;color:var(--tinta)}
+.marca span{font:500 9.5px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--gris);white-space:nowrap}
+.nav{display:flex;align-items:center;gap:8px}
+.btn{
+  font:600 10.5px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--tinta);background:#F7F4EE;border:1px solid #C9C1B2;border-radius:2px;
+  padding:9px 13px;cursor:pointer;transition:background .18s,color .18s,border-color .18s;
+}
+.btn:hover:not(:disabled){background:var(--tinta);color:#F7F4EE;border-color:var(--tinta)}
+.btn:disabled{opacity:.32;cursor:default}
+.flecha{width:34px;height:32px;padding:0;font:400 15px/1 Georgia,serif;letter-spacing:0}
+.folio-bar{font:400 12px/1 Georgia,serif;color:#6E675C;min-width:82px;text-align:center;white-space:nowrap}
+
+/* ---------- escenario ---------- */
+.stage{flex:1;position:relative;overflow:auto;display:flex;perspective:2600px;min-height:0;-webkit-overflow-scrolling:touch}
+#lienzo{margin:auto;position:relative;transform-style:preserve-3d}
+#scaler{transform:scale(var(--k));transform-origin:top left;transform-style:preserve-3d;transition:transform .35s ease}
+#book{position:relative;width:1280px;height:890px;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.55,0,.2,1)}
+#book.borde-izq{transform:translateX(-320px)}
+#book.borde-der{transform:translateX(320px)}
+
+.leaf{
+  position:absolute;left:640px;top:0;width:640px;height:890px;
+  transform-origin:left center;transform-style:preserve-3d;
+  transition:transform .95s cubic-bezier(.52,0,.22,1);
+}
+.leaf.flip{transform:rotateY(-180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  overflow:hidden;background:var(--papel);
+}
+.face.back{transform:rotateY(180deg)}
+/* al terminar el giro las hojas vuelven a plano: el texto se dibuja nítido otra vez */
+#book.quieto{transform-style:flat}
+#book.quieto .leaf{transform:none!important;transition:none!important;will-change:auto;pointer-events:none}
+#book.quieto .face{visibility:hidden}
+#book.quieto .leaf.pizq .face.back{visibility:visible;transform:none;left:-640px;right:auto;width:640px;pointer-events:auto}
+#book.quieto .leaf.pder .face.front{visibility:visible;transform:none;pointer-events:auto}
+.leaf{will-change:transform}
+/* canto de las hojas: las leídas a la izquierda, las que faltan a la derecha */
+.pila{position:absolute;top:7px;bottom:7px;width:0;z-index:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,#FBF8F2 0 1.5px,#CFC7B6 1.5px 3px);
+  transition:width .5s cubic-bezier(.3,1,.4,1);}
+.pila.izq{left:0;transform:translateX(-100%);border-radius:2px 0 0 2px;
+  box-shadow:-7px 10px 20px -10px rgba(20,38,59,.6),inset -1px 0 0 rgba(20,38,59,.12)}
+.pila.der{right:0;transform:translateX(100%);border-radius:0 2px 2px 0;
+  box-shadow:7px 10px 20px -10px rgba(20,38,59,.6),inset 1px 0 0 rgba(20,38,59,.12)}
+.face{box-shadow:0 12px 34px -26px rgba(20,38,59,.6)}
+.face.vacia{background:transparent;box-shadow:none}
+/* sombra de pliegue */
+.face::after{
+  content:"";position:absolute;top:0;bottom:0;width:54px;pointer-events:none;z-index:9;
+}
+.face.front::after{left:0;background:linear-gradient(90deg,rgba(20,38,59,.17),rgba(20,38,59,0))}
+.face.back::after{right:0;background:linear-gradient(270deg,rgba(20,38,59,.17),rgba(20,38,59,0))}
+.face.vacia::after{display:none}
+
+
+
+.pagina{position:relative;width:640px;height:890px;overflow:hidden;background:var(--papel)}
+
+/* folio a la derecha en páginas impares (cara frontal) */
+.face.front .folio{left:auto!important;right:56px}
+
+/* pista de pasar hoja */
+.hint{
+  position:absolute;bottom:16px;right:20px;z-index:20;
+  font:600 9.5px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;
+  color:#9A9284;background:rgba(249,247,242,.86);border:1px solid #D9D2C4;
+  padding:8px 12px;border-radius:2px;pointer-events:none;
+  animation:latir 3.4s ease-in-out infinite;
+}
+.hint.oculto{display:none}
+@keyframes latir{0%,100%{opacity:.55}50%{opacity:1}}
+.zona{position:absolute;top:0;bottom:0;width:14%;z-index:15;cursor:pointer}
+.zona.izq{left:0}.zona.der{right:0}
+
+/* ---------- índice ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,38,59,.55);z-index:60;
+  display:flex;align-items:center;justify-content:center;padding:30px;
+  opacity:0;visibility:hidden;transition:opacity .25s;
+}
+.overlay.on{opacity:1;visibility:visible}
+.overlay .caja{
+  background:var(--papel2);max-width:520px;width:100%;padding:32px 34px;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.5);
+  transform:translateY(10px);transition:transform .3s cubic-bezier(.3,1,.4,1);
+}
+.overlay.on .caja{transform:none}
+.overlay h3{margin:0;font:400 24px/1 Georgia,serif;color:var(--tinta)}
+.overlay ul{margin:6px 0 0;padding:0;list-style:none;max-height:56vh;overflow:auto}
+.overlay li{border-bottom:1px solid #EDE7DC}
+.overlay li button{
+  width:100%;display:flex;align-items:baseline;gap:14px;background:transparent;border:0;
+  padding:12px 2px;cursor:pointer;text-align:left;color:var(--tinta);font-family:Georgia,serif;
+}
+.overlay li button:hover{background:#EFEAE0}
+.overlay li .n{font:600 9.5px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:var(--terra);width:20px}
+.overlay li .t{flex:1;font:400 16px/1.3 Georgia,serif}
+.overlay li .p{font:400 12.5px/1.4 Georgia,serif;color:var(--gris)}
+
+/* ---------- barra de avance ---------- */
+.progreso{height:2px;background:rgba(20,38,59,.09);flex:0 0 2px;position:relative;z-index:30}
+.progreso i{display:block;height:2px;background:var(--terra);width:0;transition:width .5s cubic-bezier(.3,1,.4,1)}
+
+/* ---------- utilidades interactivas ---------- */
+.tap{cursor:pointer;transition:transform .3s cubic-bezier(.3,1,.4,1),box-shadow .3s,border-color .3s,background .3s}
+.tap:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,38,59,.55)}
+.tap:focus-visible{outline:2px solid var(--terra);outline-offset:2px}
+.rev{opacity:0;max-height:0;overflow:hidden;transition:opacity .45s ease,max-height .5s cubic-bezier(.3,1,.4,1)}
+.rev.on{opacity:1;max-height:300px}
+.cliente{transition:border-color .3s,background .3s}
+.cliente:hover{background:#FFFFFF}
+.cliente .sub,.cliente .fila-meta{transition:opacity .25s}
+.cliente.chico .sub,.cliente.chico .fila-meta{display:none}
+.aparece>*{opacity:0;transform:translateY(12px)}
+.pagina.viva .aparece>*{animation:subir .7s cubic-bezier(.25,.9,.3,1) forwards}
+@keyframes subir{to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes draw{from{stroke-dashoffset:1400}to{stroke-dashoffset:0}}
+@keyframes girar{to{stroke-dashoffset:0}}
+@keyframes puntos{0%,80%,100%{opacity:.25}40%{opacity:1}}
+a{color:var(--terra);text-decoration:none}
+a:hover{color:var(--tinta)}
+
+.pista{
+  display:inline-flex;align-items:center;gap:8px;
+  font:600 9.5px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:#B0522A;border:1px solid rgba(176,82,42,.4);border-radius:999px;padding:6px 12px 6px 9px;
+  background:rgba(176,82,42,.05);
+}
+.pista::before{content:"";width:7px;height:7px;border-radius:50%;background:#B0522A;animation:pulso 2s ease-in-out infinite}
+.pista.clara{color:#E0996E;border-color:rgba(224,153,110,.45);background:rgba(224,153,110,.09)}
+.pista.clara::before{background:#E0996E}
+@keyframes pulso{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.mas-t{
+  flex:0 0 auto;width:22px;height:22px;border-radius:50%;border:1px solid rgba(176,82,42,.45);
+  color:#B0522A;display:flex;align-items:center;justify-content:center;
+  font:400 14px/1 Georgia,serif;transition:background .25s,color .25s,border-color .25s;
+}
+.cap6:hover .mas-t,.cap6.on .mas-t{background:#B0522A;color:#FFFDF9;border-color:#B0522A}
+
+/* marca de "me pasa" en los dolores */
+.dolor{position:relative;cursor:pointer;transition:background .3s}
+.dolor:hover{background:rgba(176,82,42,.045)}
+.dolor h4{padding-right:86px}
+.dolor .marca-si{
+  position:absolute;right:0;top:20px;
+  font:600 9px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:#B9B1A2;border:1px dashed #C9C1B2;padding:5px 9px;border-radius:999px;
+  transition:all .3s;white-space:nowrap;
+}
+.dolor:hover .marca-si{color:var(--terra);border-color:var(--terra)}
+.dolor.si .marca-si{color:#FFFDF9;background:var(--terra);border:1px solid var(--terra)}
+.dolor.si{background:rgba(176,82,42,.06)}
+
+/* tabs de gráficas */
+.tabs{display:flex;gap:0;border:1px solid var(--linea);background:var(--tarjeta);margin-top:22px}
+.tabs button{
+  flex:1;background:transparent;border:0;border-right:1px solid var(--linea);
+  padding:13px 8px;cursor:pointer;color:var(--texto);
+  font:600 9.5px/1.25 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;
+  transition:background .25s,color .25s;
+}
+.tabs button:last-child{border-right:0}
+.tabs button:hover{background:#F1ECE1}
+.tabs button.on{background:var(--tinta);color:#F7F4EE}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:#E2DBCD;outline:none;margin:0}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--tinta);cursor:pointer;border:3px solid var(--tarjeta);box-shadow:0 0 0 1px var(--tinta)}
+.slider::-moz-range-thumb{width:17px;height:17px;border-radius:50%;background:var(--tinta);cursor:pointer;border:3px solid var(--tarjeta);box-shadow:0 0 0 1px var(--tinta)}
+.qop{transition:background .2s,color .2s,border-color .2s}
+.qop:hover{border-color:var(--tinta)!important}
+.qbtn{transition:background .25s,border-color .25s}
+.qbtn:hover{border-color:var(--arena)!important}
+
+.rotar{display:none}
+@media (max-width:760px){ #btnFull{display:none} }
+@media (max-width:999px){
+  .hint{display:none}
+  .marca span{display:none}
+  .chrome{padding:0 12px;gap:8px}
+  .btn{padding:8px 9px;font-size:9.5px;letter-spacing:.1em}
+  .folio-bar{min-width:56px;font-size:11px}
+}
+body.zoom .zona{display:none}
+@media (max-width:860px) and (orientation:portrait){
+  .rotar{
+    display:block;position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:20;
+    font:600 9px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#9A9284;
+    background:rgba(249,247,242,.9);border:1px solid #D9D2C4;padding:7px 11px;border-radius:2px;
+    pointer-events:none;white-space:nowrap;
+  }
+  body.zoom .rotar{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <div class="marca"><span>Edición 01 · Cuatro minutos</span></div>
+  <div class="nav">
+    <button class="btn" id="btnIdx" type="button">Índice</button>
+    <button class="btn" id="btnZoom" type="button" aria-label="Acercar">Acercar</button>
+    <button class="btn" id="btnFull" type="button" aria-label="Pantalla completa">Pantalla</button>
+    <span class="folio-bar" id="fPg">1 / 20</span>
+    <button class="btn flecha" id="prev" type="button" aria-label="Anterior">&lsaquo;</button>
+    <button class="btn flecha" id="next" type="button" aria-label="Siguiente">&rsaquo;</button>
+  </div>
+</div>
+<div class="progreso"><i id="fBar"></i></div>
+
+<div class="stage" id="stage">
+  <div id="lienzo"><div id="scaler"><div id="book"></div></div></div>
+  <div class="zona izq" id="zIzq"></div>
+  <div class="zona der" id="zDer"></div>
+  <div class="hint" id="hint">Pase la hoja &rsaquo;</div>
+  <div class="rotar" id="rotar">Gire el teléfono para leerla mejor</div>
+</div>
+
+
+<div class="overlay" id="idx">
+  <div class="caja">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #DED7C9;padding-bottom:14px">
+      <h3>Índice</h3>
+      <span style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">20 páginas</span>
+    </div>
+    <ul id="tocLista"></ul>
+  </div>
+</div>
+
+<div id="fuente" style="display:none">
+<div class="pagina" data-n="1" data-cap="Portada" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,'Iowan Old Style','Times New Roman',serif">
+
+<div style="position:absolute;top:-130px;right:-170px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(176,82,42,.15),rgba(176,82,42,0) 70%)"></div>
+<div style="position:relative;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #DED7C9;padding-bottom:16px">
+  <span style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#8C8477">Edición 01 · Decisiones y datos</span>
+  <span style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#8C8477">2026</span>
+</div>
+<div style="position:relative;margin-top:64px">
+  <div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">El 75% se queda en el camino</div>
+  <h1 style="margin:18px 0 0;font:400 60px/1.03 Georgia,serif;letter-spacing:-.02em">Tres de cada<br>cuatro no llegan.</h1>
+  <div style="width:64px;height:3px;background:#B0522A;margin-top:28px"></div>
+  <p style="margin:26px 0 0;font:400 17px/1.6 Georgia,serif;color:#4A4740;max-width:410px;text-wrap:pretty">Tres de cada cuatro pilotos de inteligencia artificial no llegan nunca a producción. La tecnología casi nunca es la culpable.</p>
+</div>
+<div style="position:absolute;left:56px;right:56px;bottom:96px">
+  <div style="display:inline-flex;align-items:baseline;gap:10px;border:1px solid #14263B;padding:12px 18px">
+    <span style="font:400 19px/1 Georgia,serif">Cuatro minutos de lectura.</span>
+    <span style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#B0522A">Para usar el lunes</span>
+  </div>
+  <p style="margin:22px 0 0;font:400 13.5px/1.6 Georgia,serif;color:#6E675C;max-width:400px;text-wrap:pretty">Cinco páginas se leen. Dos se tocan. Al final hay un diagnóstico de cinco preguntas sobre su propia empresa.</p>
+</div>
+<div style="position:absolute;left:56px;right:56px;bottom:44px;border-top:1px solid #DED7C9;padding-top:14px;font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">Alex Zapata · fundador de DataInsights</div>
+
+</div>
+<div class="pagina" data-n="2" data-cap="La escena" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">La escena · cualquier empresa</div>
+<h2 style="margin:14px 0 0;font:400 36px/1.12 Georgia,serif">El piloto que<br>funcionó perfecto</h2>
+<div class="aparece" style="margin-top:32px;position:relative;padding-left:2px">
+  <div style="position:absolute;left:14px;top:12px;bottom:14px;width:1px;background:#DED7C9"></div>
+  <div style="position:relative;display:flex;gap:18px;padding:0 0 20px"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#14263B;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">1</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Alguien propone usar inteligencia artificial para un problema real. Digamos: saber con anticipación qué clientes se van a demorar en pagar.</p></div><div style="position:relative;display:flex;gap:18px;padding:0 0 20px"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#14263B;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">2</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Se hace la prueba con datos históricos. Un archivo limpio y ordenado que alguien preparó <strong style="font-weight:700">a mano</strong> durante dos semanas.</p></div><div style="position:relative;display:flex;gap:18px;padding:0 0 20px"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#14263B;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">3</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Funciona. Acierta ocho de cada diez veces. Se lleva al comité. Aplausos.</p></div><div style="position:relative;display:flex;gap:18px;padding:0 0 20px"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#14263B;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">4</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Se aprueba pasarlo a producción.</p></div><div style="position:relative;display:flex;gap:18px;padding:0 0 20px"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#14263B;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">5</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Ahí empieza el problema: en la operación real los datos no llegan limpios, ni completos, ni a tiempo. Cada sede registra a su manera.</p></div><div style="position:relative;display:flex;gap:18px;padding:0 0 0"><span style="flex:0 0 30px;height:30px;border-radius:50%;background:#B0522A;color:#F7F4EE;display:flex;align-items:center;justify-content:center;font:600 12px/1 system-ui,sans-serif">6</span><p style="margin:1px 0 0;font:400 15.5px/1.6 Georgia,serif;text-wrap:pretty">Seis meses después el proyecto no se canceló. Simplemente <strong style="font-weight:700">dejó de mencionarse</strong> en las reuniones.</p></div>
+</div>
+<p style="margin:30px 0 0;padding-top:20px;border-top:1px solid #E2DBCD;font:italic 400 16px/1.65 Georgia,serif;color:#6E675C;text-wrap:pretty">Nadie hizo nada mal. Eso es lo que más cuesta entender.</p>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">2</div>
+
+</div>
+<div class="pagina" data-n="3" data-cap="El dato" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">El dato</div>
+<h3 style="margin:14px 0 0;font:400 32px/1.14 Georgia,serif">No es su empresa.<br>Es casi todo el mundo.</h3>
+<div style="margin-top:26px;background:#FFFDF9;border:1px solid #E2DBCD;padding:24px 24px 20px">
+  <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8C8477">De cada cuatro empresas que lo intentan</div>
+  <svg id="gCuatro" viewBox="-6 0 500 150" style="width:100%;margin-top:18px;display:block"></svg>
+  <p id="cuatroTxt" style="margin:14px 0 0;font:400 14px/1.6 Georgia,serif;color:#4A4740;text-wrap:pretty;min-height:44px">Solo <strong style="font-weight:700">1 de cada 4</strong> ha logrado llevar siquiera el 40% de sus pilotos a producción.</p>
+  <div style="margin-top:12px"><span class="pista">Toque cada hoja y le digo por qué</span></div>
+</div>
+<div style="margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div style="background:#FFFDF9;border:1px solid #E2DBCD;padding:18px 18px">
+    <div style="font:600 8.5px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8C8477">Esperaba más ingresos</div>
+    <div class="cuenta" data-a="74" data-pos="%" data-dec="0" style="margin-top:9px;font:400 30px/1 Georgia,serif">74%</div>
+  </div>
+  <div style="background:#14263B;color:#F2EDE3;padding:18px 18px">
+    <div style="font:600 8.5px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#E0996E">Lo logró</div>
+    <div class="cuenta" data-a="20" data-pos="%" data-dec="0" style="margin-top:9px;font:400 30px/1 Georgia,serif">20%</div>
+  </div>
+</div>
+<p style="margin:16px 0 0;font:400 13px/1.5 Georgia,serif;color:#8C8477">Deloitte · <em>El estado de la IA en las empresas</em>, 2026</p>
+<p style="margin:22px 0 0;padding-top:18px;border-top:1px solid #14263B;font:400 19px/1.5 Georgia,serif;text-wrap:pretty">Cuando les preguntan por qué, más de la mitad responde lo mismo: <strong style="font-weight:700">falta gente que entienda la tecnología y el negocio al mismo tiempo.</strong> Nadie dice que le falte tecnología.</p>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">3</div>
+
+</div>
+<div class="pagina" data-n="4" data-cap="Las tres formas de morir" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,'Iowan Old Style','Times New Roman',serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">Capítulo 01</div>
+<h2 style="margin:14px 0 0;font:400 40px/1.08 Georgia,serif">Las tres<br>formas de morir</h2>
+<p style="margin:18px 0 0;font:400 14.5px/1.65 Georgia,serif;color:#4A4740;max-width:420px;text-wrap:pretty">Casi siempre es una de estas tres. Ninguna es técnica.</p>
+<div style="margin-top:14px"><span class="pista">Toque las que le hayan pasado</span></div>
+<div style="margin-top:22px;display:flex;flex-direction:column;gap:24px">
+<div class="dolor" style="border-top:1px solid #DED7C9;padding-top:20px"><span class="marca-si">¿le pasó?</span><div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 32px/1 Georgia,serif;color:#DCCFBE">01</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Murió entre la prueba y el pasillo</h4></div><p style="margin:11px 0 0;font:400 14px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">La prueba se hizo con datos preparados a mano. La operación real tiene datos que llegan tarde, incompletos y con criterios distintos en cada sede. Nadie midió esa distancia antes de aprobar.</p><p style="margin:10px 0 0;font:400 13px/1.55 Georgia,serif;color:#B0522A;text-wrap:pretty">&rarr; <strong style="font-weight:700">Señal de alarma:</strong> cuando le presenten un piloto, pregunte quién preparó los datos y cuánto se demoró.</p></div>
+<div class="dolor" style="border-top:1px solid #DED7C9;padding-top:20px"><span class="marca-si">¿le pasó?</span><div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 32px/1 Georgia,serif;color:#DCCFBE">02</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Murió porque nadie decidió cuál era el número bueno</h4></div><p style="margin:11px 0 0;font:400 14px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">El tablero funcionaba. Mostraba 1.842 y el gerente tenía 1.907 en la cabeza. Nadie se sentó a definir cuál de los dos era el correcto. A los tres meses volvieron al Excel de siempre.</p><p style="margin:10px 0 0;font:400 13px/1.55 Georgia,serif;color:#B0522A;text-wrap:pretty">&rarr; <strong style="font-weight:700">Señal de alarma:</strong> si dos áreas reportan la misma cifra distinta y nadie lo ha escrito, el tablero va a morir.</p></div>
+</div>
+<div style="position:absolute;left:56px;right:56px;bottom:64px;font:italic 400 13.5px/1.6 Georgia,serif;color:#6E675C;border-top:1px solid #DED7C9;padding-top:14px">La tercera está en la página siguiente &rarr;</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">4</div>
+
+</div>
+<div class="pagina" data-n="5" data-cap="Las tres formas de morir" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,'Iowan Old Style','Times New Roman',serif">
+
+<div style="display:flex;flex-direction:column;gap:24px">
+<div class="dolor" style="border-top:1px solid #DED7C9;padding-top:20px"><span class="marca-si">¿le pasó?</span><div style="display:flex;align-items:baseline;gap:14px"><span style="font:400 32px/1 Georgia,serif;color:#DCCFBE">03</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Murió cuando esa persona cambió de área</h4></div><p style="margin:11px 0 0;font:400 14px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">Se automatizó el reporte. Funcionó. Ahorró seis horas por semana. Meses después la persona que lo armó cambió de área, el sistema de origen cambió un campo y se rompió. Nadie sabía cómo estaba hecho por dentro. Volvieron a hacerlo a mano.</p><p style="margin:10px 0 0;font:400 13px/1.55 Georgia,serif;color:#B0522A;text-wrap:pretty">&rarr; <strong style="font-weight:700">Señal de alarma:</strong> pregunte quién más, además de esa persona, sabe cómo funciona.</p></div>
+</div>
+<div style="margin-top:34px;background:#14263B;color:#F2EDE3;padding:28px 30px 30px">
+  <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#E0996E">Lo que esto significa</div>
+  <p id="muerteCont" style="margin:14px 0 0;font:400 14px/1 Georgia,serif;color:#E0996E">&nbsp;</p>
+  <p style="margin:14px 0 0;font:400 21px/1.44 Georgia,serif;text-wrap:pretty">Si marcó dos o más, usted no tiene un problema de tecnología. Tiene un problema de acuerdos: <strong style="font-weight:700">quién mide qué, con qué criterio, y quién responde cuando se rompe.</strong></p>
+  <p style="margin:14px 0 0;font:400 13.5px/1.6 Georgia,serif;color:#C4C7CC;text-wrap:pretty">Esos acuerdos se escriben en una página. Y una vez escritos, se pueden automatizar. En ese orden.</p>
+</div>
+<div style="margin-top:24px;display:flex;border:1px solid #E2DBCD;background:#FFFDF9">
+  <div style="flex:1;padding:18px 18px;border-right:1px solid #E2DBCD">
+    <div style="font:400 25px/1 Georgia,serif;color:#B0522A">Cero</div>
+    <p style="margin:8px 0 0;font:400 12px/1.5 Georgia,serif;color:#4A4740">de las tres se arregla comprando una herramienta nueva.</p>
+  </div>
+  <div style="flex:1;padding:18px 18px">
+    <div style="font:400 25px/1 Georgia,serif;color:#B0522A">1 página</div>
+    <p style="margin:8px 0 0;font:400 12px/1.5 Georgia,serif;color:#4A4740">bien escrita evita las tres. Está en el capítulo 03.</p>
+  </div>
+</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">5</div>
+
+</div>
+<div class="pagina" data-n="6" data-cap="Lo que falta no se compra" style="position:relative;width:640px;height:890px;background:#14263B;color:#F2EDE3;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="position:absolute;inset:0;background:radial-gradient(90% 55% at 100% 0%,rgba(176,82,42,.26),rgba(20,38,59,0) 60%)"></div>
+<div style="position:relative">
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#E0996E">Capítulo 02</div>
+<h2 style="margin:14px 0 0;font:400 42px/1.08 Georgia,serif">Lo que falta<br>no se compra</h2>
+<div style="margin-top:30px;display:flex;flex-direction:column;gap:20px">
+  <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:18px">
+    <p style="margin:0;font:400 16.5px/1.6 Georgia,serif;color:#F2EDE3;text-wrap:pretty">Cuando a las empresas les preguntan qué las frena, la respuesta número uno <strong style="font-weight:700">no es presupuesto ni herramientas</strong>: es que no tienen a alguien que entienda las dos orillas.</p>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:18px;display:flex;gap:20px;align-items:baseline">
+    <div style="flex:0 0 auto;font:400 38px/1.05 Georgia,serif;color:#E0996E">1 de<br>cada 2</div>
+    <p style="margin:0;font:400 14.5px/1.6 Georgia,serif;color:#C4C7CC;text-wrap:pretty">Más de la mitad de las empresas señala <strong style="font-weight:700">la falta de ese perfil</strong> como su principal obstáculo. Por encima del presupuesto, por encima de la infraestructura, por encima de la regulación.</p>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:18px">
+    <p style="margin:0;font:400 16.5px/1.6 Georgia,serif;color:#F2EDE3;text-wrap:pretty">No es un cargo nuevo. Es una función que hoy <strong style="font-weight:700">no tiene dueño</strong>: traducir un problema del negocio en algo que se pueda construir, y traducir de vuelta lo construido en una decisión que alguien pueda tomar.</p>
+  </div>
+</div>
+<p style="position:absolute;left:0;right:0;top:560px;margin:0;font:italic 400 19px/1.55 Georgia,serif;color:#E0996E;border-top:1px solid rgba(255,255,255,.18);padding-top:20px;text-wrap:pretty">Mientras esa silla esté vacía, cada piloto va a nacer bien y morir en el traspaso.</p>
+</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#7C858F">6</div>
+
+</div>
+<div class="pagina" data-n="7" data-cap="El marco" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">El marco más citado</div>
+<h3 style="margin:14px 0 0;font:400 32px/1.14 Georgia,serif">Seis capacidades,<br>y una que va antes</h3>
+<p style="margin:13px 0 0;font:400 14px/1.6 Georgia,serif;color:#4A4740;max-width:430px;text-wrap:pretty">McKinsey resume la transformación en seis. <span style="color:#8C8477">Lamarre, Smaje y Zemmel · <em>REWIRED</em>.</span></p>
+<ul style="margin:14px 0 0;padding:0;list-style:none"><li class="cap6" data-i="0" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">01</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Alta dirección alineada</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Una hoja de ruta que manda el negocio, no la tecnología.</div></div><span class="mas-t">+</span></li><li class="cap6" data-i="1" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">02</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Talento propio</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Gente de casa, no alquilada por proyecto.</div></div><span class="mas-t">+</span></li><li class="cap6" data-i="2" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">03</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Una forma de trabajar</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Que permita avanzar en varios frentes a la vez.</div></div><span class="mas-t">+</span></li><li class="cap6" data-i="3" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">04</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Tecnología sin pedir permiso</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Que cada equipo llegue a lo que necesita.</div></div><span class="mas-t">+</span></li><li class="cap6" data-i="4" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">05</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Datos integrados</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Que se puedan reutilizar en toda la empresa.</div></div><span class="mas-t">+</span></li><li class="cap6" data-i="5" style="display:flex;gap:14px;align-items:baseline;border-top:1px solid #E2DBCD;padding:9px 4px;cursor:pointer;transition:background .25s,opacity .25s"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.14em;color:#B0522A;flex:0 0 20px">06</span><div style="flex:1"><div style="font:400 17px/1.25 Georgia,serif">Adopción y escalamiento</div><div style="margin-top:3px;font:400 12.5px/1.45 Georgia,serif;color:#8C8477">Que lo construido se use y crezca.</div></div><span class="mas-t">+</span></li></ul>
+<div id="cap6Caja" style="margin-top:14px;background:#14263B;color:#F2EDE3;padding:15px 18px;min-height:92px;display:flex;flex-direction:column;justify-content:center;transition:background .3s">
+  <div id="cap6Rot" style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#E0996E">Toque una capacidad</div>
+  <p id="cap6Txt" style="margin:9px 0 0;font:400 14.5px/1.58 Georgia,serif;color:#C4C7CC;text-wrap:pretty">Y le digo dónde se rompe esa capacidad en una empresa que no tiene cientos de equipos.</p>
+</div>
+<div style="margin-top:18px;padding-top:18px;border-top:1px solid #14263B">
+  <p style="margin:0;font:400 20px/1.45 Georgia,serif;text-wrap:pretty">El marco es correcto. Pero está escrito para empresas con <strong style="font-weight:700">cientos de equipos</strong>.</p>
+  <p style="margin:12px 0 0;font:400 14.5px/1.6 Georgia,serif;color:#4A4740;text-wrap:pretty">Y falta una que no aparece, porque en una multinacional ya viene resuelta: <strong style="font-weight:700">que todos estén de acuerdo en qué significa cada cifra.</strong> Sin eso, las seis se construyen sobre arena.</p>
+</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">7</div>
+
+</div>
+<div class="pagina" data-n="8" data-cap="Qué hacer el lunes" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">Capítulo 03 · Lo práctico</div>
+<h2 style="margin:14px 0 0;font:400 42px/1.08 Georgia,serif">Qué hacer<br>el lunes</h2>
+<p style="margin:18px 0 0;font:400 15px/1.65 Georgia,serif;color:#4A4740;max-width:420px;text-wrap:pretty">En este orden. No los haga todos a la vez: el primero sostiene a los otros tres.</p>
+<div style="margin-top:30px;display:flex;flex-direction:column;gap:22px">
+<div style="border-top:1px solid #DED7C9;padding-top:18px"><div style="display:flex;gap:14px;align-items:baseline"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.16em;color:#B0522A">PASO 1</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Escoja una sola cifra</h4></div><div style="margin:11px 0 0;font:400 14.5px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">La que más se discute en su comité. Una sola. Escriba en <strong style="font-weight:700">una página</strong> qué se cuenta, qué no se cuenta y quién responde por ella. Que la firmen las áreas que la usan.</div><p style="margin:10px 0 0;font:italic 400 13px/1.55 Georgia,serif;color:#B0522A">Toma dos reuniones. Cuesta cero.</p></div><div style="border-top:1px solid #DED7C9;padding-top:18px"><div style="display:flex;gap:14px;align-items:baseline"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.16em;color:#B0522A">PASO 2</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Antes de aprobar un piloto, pida tres cosas</h4></div><div style="margin:11px 0 0;font:400 14.5px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty"><ul style="margin:0;padding:0 0 0 2px;list-style:none;display:flex;flex-direction:column;gap:7px"><li style="display:flex;gap:9px"><span style="color:#B0522A">—</span><span>Quién preparó los datos de la prueba, y cuánto se demoró.</span></li><li style="display:flex;gap:9px"><span style="color:#B0522A">—</span><span>Cómo van a llegar esos datos <strong style="font-weight:700">todos los días</strong> cuando esté en operación.</span></li><li style="display:flex;gap:9px"><span style="color:#B0522A">—</span><span>Qué tiene que pasar para decir que quedó bien: un número, no una sensación.</span></li></ul></div><p style="margin:10px 0 0;font:italic 400 13px/1.55 Georgia,serif;color:#B0522A">Si no le responden las tres, eso todavía no es un piloto: es una demostración.</p></div>
+</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">8</div>
+
+</div>
+<div class="pagina" data-n="9" data-cap="Qué hacer el lunes" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="display:flex;flex-direction:column;gap:22px">
+<div style="border-top:1px solid #DED7C9;padding-top:18px"><div style="display:flex;gap:14px;align-items:baseline"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.16em;color:#B0522A">PASO 3</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Ponga fecha de apagado, no solo de entrega</h4></div><div style="margin:11px 0 0;font:400 14.5px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">Seis semanas. Al final: o muestra el resultado que se acordó, o se apaga. Sin negociación y sin prórroga.</div><p style="margin:10px 0 0;font:italic 400 13px/1.55 Georgia,serif;color:#B0522A">Los proyectos no mueren de un tiro. Mueren de prórroga.</p></div><div style="border-top:1px solid #DED7C9;padding-top:18px"><div style="display:flex;gap:14px;align-items:baseline"><span style="font:600 10px/1.5 system-ui,sans-serif;letter-spacing:.16em;color:#B0522A">PASO 4</span><h4 style="margin:0;font:400 21px/1.25 Georgia,serif">Escriba antes de construir</h4></div><div style="margin:11px 0 0;font:400 14.5px/1.62 Georgia,serif;color:#4A4740;text-wrap:pretty">Antes de que alguien programe una línea, que quede escrito qué debe pasar y cómo se sabrá que quedó bien. En lenguaje de negocio, no técnico. Eso mata el «yo entendí otra cosa» y deja el conocimiento en un papel en vez de en una cabeza.</div><p style="margin:10px 0 0;font:italic 400 13px/1.55 Georgia,serif;color:#B0522A">Es la diferencia entre un proveedor y un equipo que aprende.</p></div>
+</div>
+<div style="margin-top:30px;background:#14263B;color:#F2EDE3;padding:26px 28px">
+  <p style="margin:0;font:400 22px/1.42 Georgia,serif;text-wrap:pretty">Ninguno de los cuatro necesita presupuesto. Necesitan que alguien los sostenga.</p>
+  <p style="margin:14px 0 0;font:400 14px/1.6 Georgia,serif;color:#C4C7CC;text-wrap:pretty">Y esa es exactamente la silla que, según el estudio, más de la mitad de las empresas tiene vacía.</p>
+</div>
+<p style="position:absolute;left:56px;right:56px;bottom:96px;margin:0;font:400 15px/1.65 Georgia,serif;color:#4A4740;border-top:1px solid #14263B;padding-top:18px;text-wrap:pretty">En la página siguiente hay cinco preguntas para saber en cuál de los cuatro pasos está usted parado hoy.</p>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">9</div>
+
+</div>
+<div class="pagina" data-n="10" data-cap="Diagnóstico" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,'Iowan Old Style','Times New Roman',serif">
+
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">Diagnóstico</div>
+<h2 style="margin:14px 0 0;font:400 36px/1.08 Georgia,serif">¿Su próximo<br>piloto va a llegar?</h2>
+<p style="margin:14px 0 0;font:400 14px/1.6 Georgia,serif;color:#4A4740;max-width:420px;text-wrap:pretty">Cinco preguntas. Responda con la realidad de hoy, no con la de la presentación. El resultado aparece en la página 11.</p>
+<div style="margin-top:14px"><span class="pista">Toque su respuesta en cada una</span></div>
+<div id="quizA" style="margin-top:16px;display:flex;flex-direction:column;gap:16px"></div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">10</div>
+
+</div>
+<div class="pagina" data-n="11" data-cap="Su resultado" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,'Iowan Old Style','Times New Roman',serif">
+
+<div id="quizB" style="display:flex;flex-direction:column;gap:16px"></div>
+<div style="margin-top:22px;background:#FFFDF9;border:1px solid #E2DBCD;padding:20px 22px">
+  <div style="display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">Respondidas</div>
+    <div style="font:400 20px/1 Georgia,serif"><span id="qCont">0</span> de 5</div>
+  </div>
+  <div style="margin-top:12px;height:4px;background:#EDE7DC"><div id="qProg" style="height:4px;background:#B0522A;width:0;transition:width .45s cubic-bezier(.3,1,.4,1)"></div></div>
+  <button type="button" id="qVer" style="margin-top:16px;width:100%;background:#14263B;color:#F7F4EE;border:0;padding:14px;cursor:pointer;font:600 11px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.42;transition:background .25s,opacity .25s">Ver mi resultado &darr;</button>
+</div>
+<div id="resVacio" style="margin-top:20px;border-top:1px solid #DED7C9;padding-top:18px">
+  <p style="margin:0;font:400 17px/1.5 Georgia,serif;color:#B9B1A2;text-wrap:pretty">Responda las cinco y aquí aparece qué va a pasar con su próximo proyecto —y por dónde empezar.</p>
+</div>
+<div id="resLleno" style="display:none;margin-top:20px;border-top:1px solid #14263B;padding-top:18px">
+  <h3 id="resTit" style="margin:0;font:400 28px/1.1 Georgia,serif">&nbsp;</h3>
+  <div style="margin-top:14px;height:9px;background:#E7E0D3;position:relative">
+    <div id="resBarra" style="position:absolute;left:0;top:0;bottom:0;background:#14263B;width:0;transition:width .9s cubic-bezier(.3,1,.4,1)"></div>
+    <div id="resAguja" style="position:absolute;top:-4px;width:2px;height:17px;background:#B0522A;left:0;transition:left .9s cubic-bezier(.3,1,.4,1)"></div>
+  </div>
+  <div id="resPunt" style="margin-top:9px;font:400 12px/1 Georgia,serif;color:#8C8477">&nbsp;</div>
+  <p id="resCuerpo" style="margin:16px 0 0;font:400 15.5px/1.55 Georgia,serif;text-wrap:pretty">&nbsp;</p>
+  <div style="margin-top:16px;background:#14263B;color:#F2EDE3;padding:18px 20px">
+    <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#E0996E">Por dónde empezaría yo</div>
+    <p id="resConsejo" style="margin:10px 0 0;font:400 15px/1.55 Georgia,serif;text-wrap:pretty">&nbsp;</p>
+  </div>
+</div>
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">11</div>
+
+</div>
+<div class="pagina" data-n="12" data-cap="Cierre" style="position:relative;width:640px;height:890px;background:#14263B;color:#F2EDE3;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+
+<div style="position:absolute;inset:0;background:radial-gradient(100% 60% at 100% 100%,rgba(176,82,42,.3),rgba(20,38,59,0) 60%)"></div>
+<div style="position:relative;display:flex;flex-direction:column;height:100%;justify-content:space-between">
+  <div>
+    <div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#E0996E">Edición 01</div>
+    <div style="margin-top:14px;font:400 13px/1.6 Georgia,serif;color:#9FA6AE;max-width:400px">Decisiones y datos, en cuatro minutos y sin teoría.</div>
+  </div>
+  <div>
+    <p style="margin:0;font:400 32px/1.32 Georgia,serif;text-wrap:pretty">El piloto no se murió por la tecnología. Se murió porque nadie se sentó a definir qué era ganar.</p>
+    <div style="width:56px;height:3px;background:#E0996E;margin-top:26px"></div>
+    <p style="margin:26px 0 0;font:400 14.5px/1.7 Georgia,serif;color:#C4C7CC;max-width:420px;text-wrap:pretty">Si se reconoció en alguna de las tres formas de morir, la conversación que sigue no es sobre herramientas. Es sobre acuerdos —y esa se puede tener en una hora.</p>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,.18);padding-top:18px;display:flex;justify-content:space-between;align-items:baseline">
+    <div style="font:400 14px/1.5 Georgia,serif">Alex Zapata · fundador de DataInsights</div>
+    <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#7C858F">2026</div>
+  </div>
+</div>
+
+</div></div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,c){return (c||document).querySelector(s)},
+    $$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+var NS='http://www.w3.org/2000/svg';
+function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+var paginas=$$('#fuente .pagina'), NP=paginas.length, NL=Math.ceil(NP/2);
+var book=$('#book'), spread=0, zoom=false, montado=false;
+
+var TOC=[
+ {n:'—', t:'Portada',                         p:1},
+ {n:'—', t:'La escena: el piloto perfecto',   p:2},
+ {n:'—', t:'El dato',                         p:3},
+ {n:'01',t:'Las tres formas de morir',        p:4},
+ {n:'02',t:'Lo que falta no se compra',       p:6},
+ {n:'—', t:'Seis capacidades, y una que va antes', p:7},
+ {n:'03',t:'Qué hacer el lunes',              p:8},
+ {n:'—', t:'¿Su piloto va a llegar?',         p:10},
+ {n:'—', t:'Cierre',                          p:12}
+];
+
+/* ============ TAMAÑO ============ */
+function medir(){
+  var vw=innerWidth, vh=innerHeight;
+  var chr=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--chr'))||44;
+  var dispH = vh - chr - 2 - 12;
+  var dispW = vw - (vw<1000 ? 10 : 24);
+  var base = Math.max(Math.min(dispW/1280, dispH/890), .16);
+  var k = base * (zoom ? (vw<1000 ? 2.15 : 1.55) : 1);
+  document.documentElement.style.setProperty('--k', k);
+  var l=$('#lienzo');
+  l.style.width = Math.round(1280*k)+'px';
+  l.style.height = Math.round(890*k)+'px';
+  if(montado){ book.classList.remove('quieto'); book.offsetHeight; quieto(true); }
+  if(!montado){ montado=true; montar(); }
+}
+function montar(){
+  book.innerHTML='';
+  for(var i=0;i<NL;i++){
+    var lf=document.createElement('div'); lf.className='leaf'; lf.dataset.i=i;
+    var fr=document.createElement('div'); fr.className='face front';
+    var bk=document.createElement('div'); bk.className='face back';
+    if(paginas[2*i]) fr.appendChild(paginas[2*i]); else fr.classList.add('vacia');
+    if(paginas[2*i+1]) bk.appendChild(paginas[2*i+1]); else bk.classList.add('vacia');
+    lf.appendChild(fr); lf.appendChild(bk); book.appendChild(lf);
+  }
+  var pi=document.createElement('div'); pi.className='pila izq'; pi.id='pilaIzq';
+  var pd=document.createElement('div'); pd.className='pila der'; pd.id='pilaDer';
+  book.appendChild(pi); book.appendChild(pd);
+  aplicar(true);
+  setTimeout(activar,80);
+}
+var tQuieto=null;
+function quieto(on){
+  book.classList.toggle('quieto',on);
+  $$('.leaf',book).forEach(function(lf,i){
+    lf.classList.toggle('pizq', on && i===spread-1);
+    lf.classList.toggle('pder', on && i===spread);
+  });
+}
+function aplicar(inst){
+  quieto(false);
+  if(tQuieto) clearTimeout(tQuieto);
+  book.offsetHeight;
+  $$('.leaf',book).forEach(function(lf,i){
+    var fl=i<spread;
+    if(inst) lf.style.transition='none';
+    lf.classList.toggle('flip',fl);
+    lf.style.zIndex = fl ? (i+1) : (NL-i);
+    if(inst) requestAnimationFrame(function(){lf.style.transition=''});
+  });
+  book.classList.toggle('borde-izq', spread===0);
+  book.classList.toggle('borde-der', spread===NL);
+  var izq=spread===0?0:2*spread, der=spread>=NL?0:2*spread+1;
+  $('#fPg').textContent = (spread===0?'1':(spread>=NL?String(NP):izq+'–'+der))+' / '+NP;
+  $('#fBar').style.width=(spread/NL*100)+'%';
+  $('#prev').disabled=spread===0; $('#next').disabled=spread>=NL;
+  $('#hint').classList.toggle('oculto', spread!==0);
+  var pi=$('#pilaIzq'), pd=$('#pilaDer');
+  if(pi) pi.style.width = (spread===0?0:Math.min(22, 3+spread*3.2))+'px';
+  if(pd) pd.style.width = (spread>=NL?0:Math.min(22, 3+(NL-spread)*3.2))+'px';
+  tQuieto=setTimeout(function(){quieto(true)}, inst?60:1000);
+}
+function ir(d){
+  var s=Math.max(0,Math.min(NL,spread+d)); if(s===spread)return;
+  spread=s; aplicar(); setTimeout(activar,520); setTimeout(centrar,60);
+}
+function irA(p){ spread = p<=1 ? 0 : Math.floor(p/2); aplicar(); setTimeout(activar,520); setTimeout(centrar,60); }
+function centrar(){
+  var s=$('#stage');
+  if(!zoom){ s.scrollLeft=0; s.scrollTop=0; return; }
+  var k=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--k'))||1;
+  s.scrollLeft=(spread===0||spread>=NL)?Math.round(320*k):0; s.scrollTop=0;
+}
+function visibles(){
+  var a=[]; if(spread>0&&paginas[2*spread-1])a.push(paginas[2*spread-1]);
+  if(paginas[2*spread])a.push(paginas[2*spread]); return a;
+}
+function activar(){
+  visibles().forEach(function(p){ if(!p.classList.contains('viva')){ p.classList.add('viva'); p.dispatchEvent(new CustomEvent('viva')); } });
+}
+
+/* ============ NAVEGACIÓN ============ */
+$('#prev').addEventListener('click',function(){ir(-1)});
+$('#next').addEventListener('click',function(){ir(1)});
+$('#zIzq').addEventListener('click',function(){ir(-1)});
+$('#zDer').addEventListener('click',function(){ir(1)});
+addEventListener('keydown',function(e){
+  if(document.activeElement&&document.activeElement.tagName==='INPUT'){ if(e.key==='Escape')document.activeElement.blur(); return; }
+  if($('#idx').classList.contains('on')){ if(e.key==='Escape')$('#idx').classList.remove('on'); return; }
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();ir(1)}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();ir(-1)}
+  if(e.key==='Home')irA(1); if(e.key==='End')irA(NP);
+});
+var tx=0,ty=0;
+$('#stage').addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+$('#stage').addEventListener('touchend',function(e){
+  var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(zoom)return;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.2) ir(dx<0?1:-1);
+},{passive:true});
+$('#btnIdx').addEventListener('click',function(){$('#idx').classList.add('on')});
+$('#idx').addEventListener('click',function(e){ if(e.target===$('#idx')) $('#idx').classList.remove('on'); });
+$('#btnFull').addEventListener('click',function(){
+  var d=document.documentElement;
+  if(!document.fullscreenElement){ (d.requestFullscreen||d.webkitRequestFullscreen).call(d); }
+  else { (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+});
+addEventListener('fullscreenchange',function(){
+  $('#btnFull').textContent = document.fullscreenElement ? 'Salir' : 'Pantalla';
+  setTimeout(medir,120);
+});
+$('#btnZoom').addEventListener('click',function(){
+  zoom=!zoom; document.body.classList.toggle('zoom',zoom);
+  this.textContent = zoom?'Alejar':'Acercar'; medir(); requestAnimationFrame(centrar);
+});
+(function(){
+  var ul=$('#tocLista'); if(!ul)return;
+  TOC.forEach(function(o){
+    var li=document.createElement('li'), b=document.createElement('button'); b.type='button';
+    b.innerHTML='<span class="n">'+o.n+'</span><span class="t">'+o.t+'</span><span class="p">p.&nbsp;'+o.p+'</span>';
+    b.addEventListener('click',function(ev){ev.stopPropagation();$('#idx').classList.remove('on');irA(o.p)});
+    li.appendChild(b); ul.appendChild(li);
+  });
+})();
+
+var P=function(n){return paginas[n-1]};
+
+/* ---- p2 hilo escalonado ---- */
+(function(){ var c=$('.aparece',P(2)); if(!c)return;
+  $$(':scope > *',c).forEach(function(el,i){ el.style.animationDelay=(i*0.12)+'s'; }); })();
+
+/* ---- p3 la gráfica de cuatro ---- */
+(function(){
+  var pag=P(3), g=$('#gCuatro',pag), txt=$('#cuatroTxt',pag); if(!g)return;
+  var T=[
+   ['llego','<strong style="font-weight:700">Esta llegó.</strong> Una de cada cuatro empresas logró llevar al menos el 40% de sus pilotos a producción. Es la excepción, no la norma.'],
+   ['no1','<strong style="font-weight:700">Esta no.</strong> Los datos de la prueba no se parecían a los de la operación. Nadie midió esa distancia antes de aprobar.'],
+   ['no2','<strong style="font-weight:700">Esta tampoco.</strong> El tablero mostraba un número y el comité tenía otro en la cabeza. Volvieron al archivo de siempre.'],
+   ['no3','<strong style="font-weight:700">Ni esta.</strong> Funcionaba, pero dependía de una persona. Esa persona cambió de área y se rompió.']
+  ];
+  var W=100, H=130, GAP=26, X0=24;
+  for(var i=0;i<4;i++){
+    var x=X0+i*(W+GAP), lleno=(i===0);
+    var gg=sv('g',{'data-i':i,style:'cursor:pointer'});
+    gg.appendChild(sv('rect',{x:x,y:8,width:W,height:H,fill:lleno?'#14263B':'#FFFDF9',stroke:lleno?'#14263B':'#DED7C9','stroke-width':lleno?1:1.5,'stroke-dasharray':lleno?'':'5 4'}));
+    for(var l=0;l<5;l++){
+      gg.appendChild(sv('rect',{x:x+16,y:34+l*17,width:W-32-(l===4?26:0),height:3,fill:lleno?'rgba(242,237,227,.5)':'#E7E0D3'}));
+    }
+    var t=sv('text',{x:x+W/2,y:H+30,'font-family':'system-ui,sans-serif','font-size':9,'letter-spacing':1.4,fill:lleno?'#14263B':'#A29A8B','text-anchor':'middle'});
+    t.textContent = lleno?'LLEGÓ':'NO LLEGÓ';
+    gg.appendChild(t);
+    var bx=x+W-17, by=23;
+    var bg=sv('circle',{cx:bx,cy:by,r:9,fill:lleno?'rgba(242,237,227,.16)':'rgba(176,82,42,.1)',stroke:lleno?'rgba(242,237,227,.5)':'#B0522A','stroke-width':1,'class':'mas-svg'});
+    var bt=sv('text',{x:bx,y:by+4.5,'font-family':'Georgia,serif','font-size':12,fill:lleno?'#F2EDE3':'#B0522A','text-anchor':'middle','class':'mas-svg','style':'pointer-events:none'});
+    bt.textContent='+';
+    gg.appendChild(bg); gg.appendChild(bt);
+    g.appendChild(gg);
+  }
+  g.addEventListener('click',function(e){
+    var n=e.target.closest?e.target.closest('g[data-i]'):null; if(!n)return;
+    var i=+n.getAttribute('data-i');
+    $$('g[data-i]',g).forEach(function(o){o.style.opacity = o===n?'1':'.35'});
+    $$('.mas-svg',n).forEach(function(e){e.style.display='none'});
+    txt.innerHTML=T[i][1];
+  });
+  pag.addEventListener('viva',function(){
+    $$('g[data-i]',g).forEach(function(o,i){
+      o.style.opacity='0'; o.style.transition='opacity .5s ease '+(i*.14+.2)+'s';
+      requestAnimationFrame(function(){o.style.opacity='1'});
+    });
+  });
+})();
+
+/* ---- contadores ---- */
+function contar(pag){
+  $$('.cuenta',pag).forEach(function(el,i){
+    if(el.dataset.listo)return; el.dataset.listo='1';
+    var a=parseFloat(el.dataset.a), dec=+(el.dataset.dec||0), pre=el.dataset.pre||'', pos=el.dataset.pos||'';
+    var t0=null, dur=1100+i*120;
+    function paso(ts){ if(!t0)t0=ts; var q=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-q,3);
+      el.textContent=pre+(a*e).toFixed(dec).replace('.',',')+pos; if(q<1)requestAnimationFrame(paso); }
+    requestAnimationFrame(paso);
+  });
+}
+[3].forEach(function(n){ P(n).addEventListener('viva',function(){contar(P(n))}); });
+
+/* ---- p4/p5 las tres muertes ---- */
+(function(){
+  var todos=$$('.dolor',P(4)).concat($$('.dolor',P(5)));
+  var cont=$('#muerteCont',P(5));
+  function pintar(){
+    var n=todos.filter(function(d){return d.classList.contains('si')}).length;
+    cont.textContent = n===0 ? ' ' : 'Usted marcó '+n+' de 3.';
+  }
+  todos.forEach(function(d){ d.addEventListener('click',function(){ d.classList.toggle('si'); pintar(); }); });
+  pintar();
+})();
+
+/* ---- p7 las seis capacidades ---- */
+(function(){
+  var pag=P(7), txt=$('#cap6Txt',pag), rot=$('#cap6Rot',pag);
+  var R=["Aquí se rompe cuando cada gerencia llega a la misma reunión con su propia lista de prioridades, y la del que habla más fuerte gana.", "Aquí se rompe cuando el único que sabe cómo funciona el sistema es un proveedor que factura por hora.", "Aquí se rompe cuando todo pasa por la misma persona y hay que hacer fila para avanzar.", "Aquí se rompe cuando pedir un dato toma tres correos y una semana.", "Aquí se rompe cuando cada área guarda su propio archivo y nadie sabe cuál es el bueno.", "Aquí se rompe cuando la herramienta existe, funciona, y nadie la abre."];
+  $$('.cap6',pag).forEach(function(li){
+    li.addEventListener('click',function(){
+      $$('.cap6',pag).forEach(function(o){o.style.background='transparent';o.style.opacity='.5';o.classList.remove('on');var m=$('.mas-t',o); if(m)m.textContent='+';});
+      li.style.background='#F1ECE1'; li.style.opacity='1'; li.classList.add('on');
+      var mm=$('.mas-t',li); if(mm)mm.textContent='–';
+      rot.textContent='Dónde se rompe'; txt.style.color='#F2EDE3'; txt.textContent=R[+li.dataset.i];
+    });
+  });
+})();
+
+/* ---- p10/p11 diagnóstico ---- */
+(function(){
+  var QUIZ=[{"n": "01", "t": "¿La cifra que más se discute en su comité está definida por escrito?", "o": [["No, cada área tiene la suya", 0], ["Está en la cabeza de alguien", 1], ["Sí, escrita y con dueño", 2]]}, {"n": "02", "t": "Los datos de la última prueba que le mostraron, ¿quién los preparó?", "o": [["Alguien, a mano", 0], ["Mitad a mano, mitad automático", 1], ["Salen solos del sistema", 2]]}, {"n": "03", "t": "¿Su último proyecto de datos tenía fecha de apagado?", "o": [["No, sigue vivo sin resultado", 0], ["Tenía fecha de entrega, y se corrió", 1], ["Sí, y se respetó", 2]]}, {"n": "04", "t": "Si quien armó el último reporte automático se va mañana, ¿qué pasa?", "o": [["Se rompe y nadie sabe cómo estaba hecho", 0], ["Alguien lo reconstruye con esfuerzo", 1], ["Está escrito, cualquiera sigue", 2]]}, {"n": "05", "t": "¿Hay alguien cuyo trabajo sea traducir entre el negocio y la tecnología?", "o": [["No", 0], ["Lo hace alguien de más, encima de su cargo", 1], ["Sí, y es su trabajo", 2]]}];
+  var NIV=[{"max": 3, "t": "Su próximo piloto va a morir", "l": "En riesgo", "b": "No por falta de capacidad, sino porque no hay dónde aterrizarlo. Hoy cualquier cosa que construya va a depender de que alguien la sostenga a pulso.", "c": "Empiece por el paso 1: una sola cifra, escrita en una página, con dueño. No arranque nada más hasta tenerla."}, {"max": 6, "t": "Va a llegar, pero cojeando", "l": "A medias", "b": "Tiene lo básico, pero todo depende de personas concretas y de trabajo manual. Funciona hasta que alguien falta o el volumen crece.", "c": "Su punto débil es el paso 4: escribir antes de construir. Ahí es donde se le está yendo el tiempo y donde se rompe cuando alguien se va."}, {"max": 8, "t": "Va a llegar", "l": "Sólido", "b": "El dato y el acuerdo ya no son el cuello de botella. Lo que le está costando ahora es decidir rápido qué vale la pena construir.", "c": "Ponga fecha de apagado a todo lo que arranque. Seis semanas y un resultado acordado. Lo que no lo muestre, se apaga."}, {"max": 10, "t": "Ya está adelante", "l": "Anticipado", "b": "La información no es su problema. El reto es que probablemente tiene más capacidad instalada de la que está usando.", "c": "Busque dos decisiones repetitivas y de alto valor y vuélvalas automáticas, con la persona revisando la excepción y no el caso normal."}];
+  var resp={};
+  function bloque(q,qi){
+    var d=document.createElement('div');
+    d.style.cssText='border-top:1px solid #DED7C9;padding-top:14px';
+    var h=document.createElement('div'); h.style.cssText='display:flex;gap:11px;align-items:baseline';
+    h.innerHTML='<span style="font:600 10px/1.5 system-ui,sans-serif;color:#B0522A;letter-spacing:.14em">'+q.n+'</span>'+
+                '<h4 style="margin:0;font:400 16.5px/1.3 Georgia,serif">'+q.t+'</h4>';
+    d.appendChild(h);
+    var ops=document.createElement('div'); ops.style.cssText='margin-top:10px;display:flex;flex-direction:column;gap:5px';
+    q.o.forEach(function(o,oi){
+      var b=document.createElement('button'); b.type='button'; b.className='qop';
+      b.style.cssText='text-align:left;background:#FFFDF9;color:#4A4740;border:1px solid #E2DBCD;padding:8px 12px;cursor:pointer;font:400 13px/1.35 Georgia,serif';
+      b.textContent=o[0];
+      b.addEventListener('click',function(){
+        resp[qi]=oi;
+        $$('.qop',ops).forEach(function(x,xi){ var on=xi===oi;
+          x.style.background=on?'#14263B':'#FFFDF9'; x.style.color=on?'#F7F4EE':'#4A4740'; x.style.borderColor=on?'#14263B':'#E2DBCD'; });
+        avance();
+      });
+      ops.appendChild(b);
+    });
+    d.appendChild(ops); return d;
+  }
+  var A=$('#quizA',P(10)), B=$('#quizB',P(11));
+  QUIZ.forEach(function(q,i){ (i<3?A:B).appendChild(bloque(q,i)); });
+  var btn=$('#qVer',P(11));
+  function avance(){
+    var n=Object.keys(resp).length;
+    $('#qCont',P(11)).textContent=n;
+    $('#qProg',P(11)).style.width=(n/5*100)+'%';
+    btn.style.opacity = n===5?'1':'.42';
+    btn.style.background = n===5?'#B0522A':'#14263B';
+  }
+  btn.addEventListener('click',function(){
+    if(Object.keys(resp).length<5)return;
+    var sc=Object.keys(resp).reduce(function(a,k){return a+QUIZ[k].o[resp[k]][1]},0);
+    var niv=NIV.filter(function(l){return sc<=l.max})[0]||NIV[NIV.length-1];
+    var pag=P(11);
+    $('#resVacio',pag).style.display='none';
+    $('#resLleno',pag).style.display='';
+    $('#resTit',pag).textContent=niv.t;
+    $('#resCuerpo',pag).textContent=niv.b;
+    $('#resConsejo',pag).textContent=niv.c;
+    $('#resPunt',pag).textContent=niv.l+' · '+sc+' de 10 puntos';
+    setTimeout(function(){
+      $('#resBarra',pag).style.width=(sc/10*100)+'%';
+      $('#resAguja',pag).style.left=(sc/10*100)+'%';
+    },120);
+  });
+  avance();
+})();
+
+var st=document.createElement('style');
+st.textContent='.cap6:hover{background:#F1ECE1!important}';
+document.head.appendChild(st);
+
+addEventListener('resize',medir);
+medir();
+setTimeout(activar,120);
+})();
+</script>
+</body>
+</html>

@@ -63,6 +63,13 @@ button{font-family:inherit}
   overflow:hidden;background:var(--papel);
 }
 .face.back{transform:rotateY(180deg)}
+/* al terminar el giro las hojas vuelven a plano: el texto se dibuja nítido otra vez */
+#book.quieto{transform-style:flat}
+#book.quieto .leaf{transform:none!important;transition:none!important;will-change:auto;pointer-events:none}
+#book.quieto .face{visibility:hidden}
+#book.quieto .leaf.pizq .face.back{visibility:visible;transform:none;left:-640px;right:auto;width:640px;pointer-events:auto}
+#book.quieto .leaf.pder .face.front{visibility:visible;transform:none;pointer-events:auto}
+.leaf{will-change:transform}
 .face{box-shadow:0 12px 34px -26px rgba(20,38,59,.6)}
 .face.vacia{background:transparent;box-shadow:none}
 /* sombra de pliegue */
@@ -185,11 +192,11 @@ a:hover{color:var(--tinta)}
 @media (max-width:999px){
   .hint{display:none}
   .pie{display:none}
+  #btnZoom{display:inline-block}
   .marca span{display:none}
   .chrome{padding:0 12px;gap:8px}
   .btn{padding:8px 9px;font-size:9.5px;letter-spacing:.1em}
   .folio-bar{min-width:56px;font-size:11px}
-  #btnZoom{display:inline-block}
 }
 body.zoom .zona{display:none}
 @media (max-width:860px) and (orientation:portrait){
@@ -225,7 +232,6 @@ body.zoom .zona{display:none}
   <div class="rotar" id="rotar">Gire el teléfono para leerla mejor</div>
 </div>
 
-<div class="pie">Use &larr; &rarr; o toque los bordes para pasar la hoja</div>
 
 <div class="overlay" id="idx">
   <div class="caja">
@@ -962,6 +968,7 @@ function medir(){
   l.style.width = Math.round(1280*k)+'px';
   l.style.height = Math.round(890*k)+'px';
   if(nuevo!==modo){ modo=nuevo; montar(); }
+  else { book.classList.remove('quieto'); book.offsetHeight; quieto(true); }
 }
 function montar(){
   document.body.classList.toggle('unapag', modo==='mono');
@@ -986,7 +993,18 @@ function montar(){
   }
   setTimeout(activar,80);
 }
+var tQuieto=null;
+function quieto(on){
+  book.classList.toggle('quieto',on);
+  $$('.leaf',book).forEach(function(lf,i){
+    lf.classList.toggle('pizq', on && i===spread-1);
+    lf.classList.toggle('pder', on && i===spread);
+  });
+}
 function aplicarLibro(inst){
+  quieto(false);
+  if(tQuieto) clearTimeout(tQuieto);
+  book.offsetHeight;
   $$('.leaf',book).forEach(function(lf,i){
     var fl=i<spread;
     if(inst) lf.style.transition='none';
@@ -1001,6 +1019,7 @@ function aplicarLibro(inst){
   $('#fBar').style.width=(spread/NL*100)+'%';
   $('#prev').disabled=spread===0; $('#next').disabled=spread>=NL;
   $('#hint').classList.toggle('oculto', spread!==0);
+  tQuieto=setTimeout(function(){quieto(true)}, inst?60:1000);
 }
 function aplicarMono(inst){
   var tr=$('#mtrack'); if(!tr)return;

@@ -134,7 +134,11 @@ body.unapag #book{width:640px;height:890px;overflow:hidden;transform:none!import
 .tap:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(20,38,59,.55)}
 .tap:focus-visible{outline:2px solid var(--terra);outline-offset:2px}
 .rev{opacity:0;max-height:0;overflow:hidden;transition:opacity .45s ease,max-height .5s cubic-bezier(.3,1,.4,1)}
-.rev.on{opacity:1;max-height:260px}
+.rev.on{opacity:1;max-height:300px}
+.cliente{transition:border-color .3s,background .3s}
+.cliente:hover{background:#FFFFFF}
+.cliente .sub,.cliente .fila-meta{transition:opacity .25s}
+.cliente.chico .sub,.cliente.chico .fila-meta{display:none}
 .aparece>*{opacity:0;transform:translateY(12px)}
 .pagina.viva .aparece>*{animation:subir .7s cubic-bezier(.25,.9,.3,1) forwards}
 @keyframes subir{to{opacity:1;transform:none}}
@@ -510,38 +514,78 @@ a:hover{color:var(--tinta)}
         <div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#7C858F">10</div>
       
 </div>
-<div class="pagina" data-n="11" data-cap="Capítulo 04 · Clientes y casos" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+<div class="pagina" data-n="11" data-cap="Clientes" style="position:relative;width:640px;height:890px;background:#F7F4EE;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
+<div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">Con quién hemos trabajado</div>
+<h3 style="margin:14px 0 0;font:400 33px/1.12 Georgia,serif">Tres nombres,<br>tres historias distintas</h3>
+<p style="margin:14px 0 0;font:400 14px/1.6 Georgia,serif;color:#4A4740;max-width:430px;text-wrap:pretty">Toque cada uno. No son logos en una franja: es lo que cambió adentro de cada empresa.</p>
 
-        <div style="font:600 10px/1 system-ui,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#B0522A">Con quién hemos trabajado</div>
-        <h3 style="margin:14px 0 0;font:400 34px/1.12 Georgia,serif">Tres casos, contados<br>en una frase</h3>
-        <div style="margin-top:34px;display:flex;flex-direction:column;gap:18px">
-          <div style="background:#FFFDF9;border:1px solid #E2DBCD;padding:22px 24px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">Retail · 41 tiendas</div>
-              <div style="font:400 22px/1 Georgia,serif;color:#B0522A">7:00 a.m.</div>
-            </div>
-            <p style="margin:12px 0 0;font:400 15px/1.6 Georgia,serif;text-wrap:pretty">Un solo número de ventas para toda la cadena, disponible antes de abrir. Se acabó la reunión de conciliación de los lunes.</p>
-          </div>
-          <div style="background:#FFFDF9;border:1px solid #E2DBCD;padding:22px 24px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">Distribución de alimentos</div>
-              <div style="font:400 22px/1 Georgia,serif;color:#B0522A">9 → 2 días</div>
-            </div>
-            <p style="margin:12px 0 0;font:400 15px/1.6 Georgia,serif;text-wrap:pretty">El cierre de mes pasó de nueve días a dos. El equipo de finanzas dejó de cuadrar archivos y volvió a analizar.</p>
-          </div>
-          <div style="background:#FFFDF9;border:1px solid #E2DBCD;padding:22px 24px">
-            <div style="display:flex;justify-content:space-between;align-items:baseline">
-              <div style="font:600 9px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8C8477">Servicios de salud</div>
-              <div style="font:400 22px/1 Georgia,serif;color:#B0522A">−6 h / semana</div>
-            </div>
-            <p style="margin:12px 0 0;font:400 15px/1.6 Georgia,serif;text-wrap:pretty">Agenda y facturación empezaron a hablarse. Seis horas menos de trabajo manual por semana, y menos cobros perdidos.</p>
-          </div>
-        </div>
-        <div style="margin-top:32px;padding-top:22px;border-top:1px solid #14263B">
-          <p style="margin:0;font:400 16px/1.65 Georgia,serif;color:#4A4740;text-wrap:pretty">Distintos sectores, mismo patrón: primero se acordó qué se iba a medir y cómo se sabría que quedó bien. La tecnología vino después, y por eso funcionó.</p>
-        </div>
-        <div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">11</div>
-      
+<div style="margin-top:20px;display:flex;flex-direction:column;gap:10px">
+
+  <div class="cliente" style="background:#FFFDF9;border:1px solid #E2DBCD;padding:16px 20px;cursor:pointer">
+    <div class="fila-meta" style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:600 8.5px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8C8477">Multinacional · varios países</div>
+      <div style="font:400 17px/1 Georgia,serif;color:#B0522A">Nómina que cuadra</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px">
+      <h4 style="margin:0;font:400 24px/1.1 Georgia,serif">Ventus</h4>
+      <span class="mas" style="color:#B0522A;font:400 18px/1 Georgia,serif">+</span>
+    </div>
+    <p class="sub" style="margin:7px 0 0;font:400 13.5px/1.5 Georgia,serif;color:#4A4740;text-wrap:pretty">Seguimiento y control de la operación, en línea y en varios países a la vez.</p>
+    <div class="rev"><ul style="margin:12px 0 0;padding:0;list-style:none;border-top:1px solid #EDE7DC;padding-top:11px;display:flex;flex-direction:column;gap:6px">
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Todo el ecosistema en un solo lugar: web y móvil, desplegado en varios países.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Alarmas y alertas, e inteligencia artificial que lee las métricas a fondo y le devuelve al negocio lo que encontró.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Quedó parametrizado: la empresa ajusta y cambia sin depender de nosotros ni de nadie.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Servidores configurados junto con el equipo de Google.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#14263B"><span style="color:#B0522A;flex:0 0 auto">★</span><span><strong style="font-weight:700">Lo que más pesó:</strong> había diferencias entre la nómina y las horas trabajadas en cada proyecto. Hoy coinciden. Eso es plata que dejó de irse.</span></li>
+    </ul></div>
+  </div>
+
+  <div class="cliente" style="background:#FFFDF9;border:1px solid #E2DBCD;padding:16px 20px;cursor:pointer">
+    <div class="fila-meta" style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:600 8.5px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8C8477">Barranquilla · operación de servicios</div>
+      <div style="font:400 17px/1 Georgia,serif;color:#B0522A">Todo en tiempo real</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px">
+      <h4 style="margin:0;font:400 24px/1.1 Georgia,serif">OML</h4>
+      <span class="mas" style="color:#B0522A;font:400 18px/1 Georgia,serif">+</span>
+    </div>
+    <p class="sub" style="margin:7px 0 0;font:400 13.5px/1.5 Georgia,serif;color:#4A4740;text-wrap:pretty">La operación, los tiempos y la plata en el mismo hilo, sin pedirle nada a nadie.</p>
+    <div class="rev"><ul style="margin:12px 0 0;padding:0;list-style:none;border-top:1px solid #EDE7DC;padding-top:11px;display:flex;flex-direction:column;gap:6px">
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Los clientes de OML entran y ven solo lo suyo, en el momento, sin llamar a preguntar.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Informes automáticos al personal y a los directivos. Nadie los arma a mano.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Nómina, facturación y contabilidad corren solas y cuadran entre sí.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Inteligencia artificial integrada al mismo flujo, no por un lado.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#14263B"><span style="color:#B0522A;flex:0 0 auto">★</span><span><strong style="font-weight:700">Lo que más pesó:</strong> se acabó el dinero que se perdía por datos que no cuadraban y liquidaciones mal hechas.</span></li>
+    </ul></div>
+  </div>
+
+  <div class="cliente" style="background:#FFFDF9;border:1px solid #E2DBCD;padding:16px 20px;cursor:pointer">
+    <div class="fila-meta" style="display:flex;justify-content:space-between;align-items:baseline">
+      <div style="font:600 8.5px/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8C8477">Aliado · formación a empresas</div>
+      <div style="font:400 17px/1 Georgia,serif;color:#B0522A">Por dónde empezar</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px">
+      <h4 style="margin:0;font:400 24px/1.1 Georgia,serif">Combarranquilla</h4>
+      <span class="mas" style="color:#B0522A;font:400 18px/1 Georgia,serif">+</span>
+    </div>
+    <p class="sub" style="margin:7px 0 0;font:400 13.5px/1.5 Georgia,serif;color:#4A4740;text-wrap:pretty">Aquí no entregamos un sistema: enseñamos a empezar bien.</p>
+    <div class="rev"><ul style="margin:12px 0 0;padding:0;list-style:none;border-top:1px solid #EDE7DC;padding-top:11px;display:flex;flex-direction:column;gap:6px">
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Ponentes ante empresas sobre cómo implementar inteligencia artificial con método, no por moda.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Por dónde empezar, en qué orden, y los errores que casi todos cometen la primera vez.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#4A4740"><span style="color:#B0522A;flex:0 0 auto">—</span><span>Varias conferencias y ruedas de negocio con empresarios de la región.</span></li>
+      <li style="display:flex;gap:9px;font:400 12px/1.45 Georgia,serif;color:#14263B"><span style="color:#B0522A;flex:0 0 auto">★</span><span><strong style="font-weight:700">Lo que más pesó:</strong> la conversación empieza antes de comprar tecnología. Ese es el mismo orden con el que trabajamos adentro.</span></li>
+    </ul></div>
+  </div>
+
+</div>
+
+<div style="margin-top:14px;background:#14263B;color:#F2EDE3;padding:16px 20px;display:flex;gap:16px;align-items:center">
+  <div style="flex:0 0 auto;font:600 8.5px/1.5 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#E0996E">Reconocimiento<br>La W Radio</div>
+  <p style="margin:0;font:400 13.5px/1.55 Georgia,serif;color:#F2EDE3;text-wrap:pretty">Nos reconocieron como una empresa que democratiza la inteligencia artificial: tenemos un desarrollo propio, de acceso fácil, para emprendedores.</p>
+</div>
+
+<div class="folio" style="position:absolute;left:56px;bottom:34px;font:400 11px/1 Georgia,serif;color:#A29A8B">11</div>
+
 </div>
 <div class="pagina" data-n="12" data-cap="Capítulo 05 · El ecosistema" style="position:relative;width:640px;height:890px;background:#F9F7F2;color:#14263B;padding:54px 56px 62px;overflow:hidden;font-family:Georgia,serif">
 
@@ -868,7 +912,7 @@ var TOC=[
  {n:'02',t:'¿En cuál se reconoce?',      p:6},
  {n:'03',t:'Nuestros servicios',         p:8},
  {n:'04',t:'Cómo trabajamos',            p:10},
- {n:'—', t:'Clientes y casos',           p:11},
+ {n:'—', t:'Clientes: Ventus, OML, Combarranquilla', p:11},
  {n:'05',t:'El ecosistema',              p:12},
  {n:'06',t:'En vivo: así se ve un lunes',p:13},
  {n:'—', t:'Su diagnóstico',             p:16},
@@ -1054,6 +1098,29 @@ var P=function(n){return paginas[n-1]};
   }
   todos.forEach(function(d){ d.addEventListener('click',function(){ d.classList.toggle('si'); pintar(); }); });
   pintar();
+})();
+
+/* ---- p11 clientes ---- */
+(function(){
+  var pag=P(11); if(!pag)return;
+  var cs=$$('.cliente',pag);
+  cs.forEach(function(c){
+    c.addEventListener('click',function(){
+      var abierto=$('.rev',c).classList.contains('on');
+      cs.forEach(function(o){
+        $('.rev',o).classList.remove('on');
+        $('.mas',o).textContent='+';
+        o.style.borderColor='#E2DBCD';
+        o.classList.remove('chico');
+      });
+      if(!abierto){
+        $('.rev',c).classList.add('on');
+        $('.mas',c).textContent='–';
+        c.style.borderColor='#B0522A';
+        cs.forEach(function(o){ if(o!==c) o.classList.add('chico'); });
+      }
+    });
+  });
 })();
 
 /* ---- p12 ecosistema ---- */

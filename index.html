@@ -45,10 +45,10 @@ button{font-family:inherit}
 .folio-bar{font:400 12px/1 Georgia,serif;color:#6E675C;min-width:82px;text-align:center;white-space:nowrap}
 
 /* ---------- escenario ---------- */
-.stage{flex:1;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;perspective:2600px;min-height:0}
-#scaler{transform:scale(var(--k));transform-style:preserve-3d;transition:transform .4s ease}
+.stage{flex:1;position:relative;overflow:auto;display:flex;perspective:2600px;min-height:0;-webkit-overflow-scrolling:touch}
+#lienzo{margin:auto;position:relative;transform-style:preserve-3d}
+#scaler{transform:scale(var(--k));transform-origin:top left;transform-style:preserve-3d;transition:transform .35s ease}
 #book{position:relative;width:1280px;height:890px;transform-style:preserve-3d;transition:transform .85s cubic-bezier(.55,0,.2,1)}
-body.unapag #book{width:640px;height:890px;overflow:hidden;transform:none!important}
 #book.borde-izq{transform:translateX(-320px)}
 #book.borde-der{transform:translateX(320px)}
 
@@ -74,8 +74,6 @@ body.unapag #book{width:640px;height:890px;overflow:hidden;transform:none!import
 .face.vacia::after{display:none}
 
 
-.mtrack{display:flex;width:100%;height:100%;transition:transform .45s cubic-bezier(.5,0,.2,1)}
-.mtrack .pagina{flex:0 0 640px}
 
 .pagina{position:relative;width:640px;height:890px;overflow:hidden;background:var(--papel)}
 
@@ -182,13 +180,26 @@ a:hover{color:var(--tinta)}
 .qop:hover{border-color:var(--tinta)!important}
 .qbtn{transition:background .25s,border-color .25s}
 .qbtn:hover{border-color:var(--arena)!important}
+#btnZoom{display:none}
+.rotar{display:none}
 @media (max-width:999px){
   .hint{display:none}
   .pie{display:none}
   .marca span{display:none}
-  .chrome{padding:0 14px;gap:10px}
-  .btn{padding:9px 11px;font-size:10px}
-  .folio-bar{min-width:64px;font-size:11.5px}
+  .chrome{padding:0 12px;gap:8px}
+  .btn{padding:8px 9px;font-size:9.5px;letter-spacing:.1em}
+  .folio-bar{min-width:56px;font-size:11px}
+  #btnZoom{display:inline-block}
+}
+body.zoom .zona{display:none}
+@media (max-width:860px) and (orientation:portrait){
+  .rotar{
+    display:block;position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:20;
+    font:600 9px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#9A9284;
+    background:rgba(249,247,242,.9);border:1px solid #D9D2C4;padding:7px 11px;border-radius:2px;
+    pointer-events:none;white-space:nowrap;
+  }
+  body.zoom .rotar{display:none}
 }
 </style>
 </head>
@@ -198,6 +209,7 @@ a:hover{color:var(--tinta)}
   <div class="marca"><span>Revista · Edición 01</span></div>
   <div class="nav">
     <button class="btn" id="btnIdx" type="button">Índice</button>
+    <button class="btn" id="btnZoom" type="button" aria-label="Acercar">Acercar</button>
     <span class="folio-bar" id="fPg">1 / 20</span>
     <button class="btn flecha" id="prev" type="button" aria-label="Anterior">&lsaquo;</button>
     <button class="btn flecha" id="next" type="button" aria-label="Siguiente">&rsaquo;</button>
@@ -206,10 +218,11 @@ a:hover{color:var(--tinta)}
 <div class="progreso"><i id="fBar"></i></div>
 
 <div class="stage" id="stage">
-  <div id="scaler"><div id="book"></div></div>
+  <div id="lienzo"><div id="scaler"><div id="book"></div></div></div>
   <div class="zona izq" id="zIzq"></div>
   <div class="zona der" id="zDer"></div>
   <div class="hint" id="hint">Pase la hoja &rsaquo;</div>
+  <div class="rotar" id="rotar">Gire el teléfono para leerla mejor</div>
 </div>
 
 <div class="pie">Use &larr; &rarr; o toque los bordes para pasar la hoja</div>
@@ -881,12 +894,12 @@ a:hover{color:var(--tinta)}
 
   <div style="margin-top:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:18px">
     <div style="font:400 22px/1.15 Georgia,serif">John Alexander Zapata Ortiz</div>
-    <div style="margin-top:6px;font:600 9px/1.4 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#9FA6AE">Estrategia y decisiones de negocio</div>
+    <div style="margin-top:6px;font:600 9px/1.4 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#9FA6AE">Inteligencia de negocio y decisión directiva</div>
     <ul style="margin:13px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
-      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Más de quince años en energía y servicios, dirigiendo estrategia y crecimiento de operaciones grandes.</span></li>
-      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Reportando a Presidencia y Junta Directiva, coordinó cinco gerencias de una operación con 1.400.000 clientes.</span></li>
-      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Llevó la productividad del 80% al 93% y subió el recaudo tres puntos, con equipos de más de 400 personas.</span></li>
-      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#F2EDE3"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Traduce el problema del negocio antes de que exista una sola línea de código.</span></li>
+      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Reestructuró el modelo completo de inteligencia de negocio de una operación con más de 1.400.000 clientes: cinco gerencias midiendo con una sola definición de cada cifra.</span></li>
+      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Diseña la arquitectura de datos, los tableros ejecutivos que la usan y las soluciones de inteligencia artificial que corren encima.</span></li>
+      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#C4C7CC"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Reportando a Presidencia y Junta Directiva, ese modelo se volvió decisión: productividad del 80% al 93% y tres puntos más de recaudo, con equipos de más de 400 personas.</span></li>
+      <li style="display:flex;gap:10px;font:400 13px/1.5 Georgia,serif;color:#F2EDE3"><span style="color:#E0996E;flex:0 0 auto">—</span><span>Quince años en energía y servicios: entiende el negocio antes de tocar la tecnología.</span></li>
     </ul>
   </div>
 
@@ -919,7 +932,7 @@ function sv(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttrib
 function num(n,d){return n.toFixed(d).replace('.',',');}
 
 var paginas=$$('#fuente .pagina'), NP=paginas.length, NL=Math.ceil(NP/2);
-var book=$('#book'), modo='', spread=0, pagMono=0;
+var book=$('#book'), modo='', spread=0, pagMono=0, zoom=false;
 
 var TOC=[
  {n:'—', t:'Portada',                    p:1},
@@ -938,12 +951,16 @@ var TOC=[
 function medir(){
   var vw=innerWidth, vh=innerHeight;
   var chr=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--chr'))||52;
-  var nuevo = vw>=1000 ? 'libro' : 'mono';
-  var dispH = vh - chr - 2 - (nuevo==='libro'?46:14);
-  var dispW = vw - (nuevo==='libro'?40:12);
-  var k = Math.min(dispW/(nuevo==='libro'?1280:640), dispH/890);
-  k = Math.max(k, .22);
+  var nuevo = 'libro';
+  var dispH = vh - chr - 2 - (vw<1000 ? 12 : 46);
+  var dispW = vw - (vw<1000 ? 10 : 40);
+  var base = Math.min(dispW/1280, dispH/890);
+  base = Math.max(base, .16);
+  var k = base * (zoom ? 2.15 : 1);
   document.documentElement.style.setProperty('--k', k);
+  var l=$('#lienzo');
+  l.style.width = Math.round(1280*k)+'px';
+  l.style.height = Math.round(890*k)+'px';
   if(nuevo!==modo){ modo=nuevo; montar(); }
 }
 function montar(){
@@ -997,12 +1014,12 @@ function aplicarMono(inst){
 function ir(d){
   if(modo==='libro'){ var s=Math.max(0,Math.min(NL,spread+d)); if(s===spread)return; spread=s; aplicarLibro(); }
   else { var p=Math.max(0,Math.min(NP-1,pagMono+d)); if(p===pagMono)return; pagMono=p; aplicarMono(); }
-  setTimeout(activar, modo==='libro'?520:340);
+  setTimeout(activar, 520); setTimeout(centrar, 60);
 }
 function irA(p){ /* p = número de página 1..20 */
   if(modo==='libro'){ spread = p<=1 ? 0 : Math.floor(p/2); aplicarLibro(); }
   else { pagMono=Math.max(0,Math.min(NP-1,p-1)); aplicarMono(); }
-  setTimeout(activar, modo==='libro'?520:340);
+  setTimeout(activar, 520); setTimeout(centrar, 60);
 }
 function visibles(){
   if(modo==='libro'){
@@ -1036,9 +1053,24 @@ var tx=0,ty=0;
 $('#stage').addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 $('#stage').addEventListener('touchend',function(e){
   var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(zoom)return;
   if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.2) ir(dx<0?1:-1);
 },{passive:true});
 $('#btnIdx').addEventListener('click',function(){$('#idx').classList.add('on')});
+$('#btnZoom').addEventListener('click',function(){
+  zoom=!zoom;
+  document.body.classList.toggle('zoom',zoom);
+  this.textContent = zoom ? 'Alejar' : 'Acercar';
+  medir();
+  requestAnimationFrame(centrar);
+});
+function centrar(){
+  var s=$('#stage');
+  if(!zoom){ s.scrollLeft=0; s.scrollTop=0; return; }
+  var k=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--k'))||1;
+  s.scrollLeft = (spread===0||spread>=NL) ? Math.round(320*k) : 0;
+  s.scrollTop = 0;
+}
 $('#idx').addEventListener('click',function(e){ if(e.target===$('#idx')) $('#idx').classList.remove('on'); });
 
 function pintarTOC(ul,cerrar){
